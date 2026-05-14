@@ -3,6 +3,14 @@ import os
 import json
 import tempfile
 from typing import Literal, Optional, List
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env từ thư mục gốc của app (ct_datalake/)
+_env_path = Path(__file__).resolve().parent / ".env"
+if not _env_path.exists():
+    _env_path = Path(__file__).resolve().parents[1] / ".env"
+load_dotenv(dotenv_path=_env_path, override=True)
 
 # ─── internal modules ───────────────────────────────────────────────
 from .search import search as faiss_search
@@ -316,3 +324,72 @@ def jd_parse_only(query: str):
     except Exception as e:
         frappe.throw(str(e))
     return {"parsed_jd": parsed}
+# ── Draft Document ────────────────────────────────────────────────────────────
+@frappe.whitelist(allow_guest=True)
+def draft_document(
+    candidate_info: str,
+    doc_type: str = "invite_collab",
+    org_name: str = "",
+    sender_name: str = "",
+    extra_note: str = "",
+):
+    """
+    Soạn thảo văn bản mời ứng viên dựa trên thông tin ứng viên.
+    
+    Params:
+        candidate_info: JSON string chứa thông tin ứng viên (name, school, expertise, ...)
+        doc_type: Loại văn bản (invite_collab, invite_expert, invite_project, invite_lecture, consult_request, partnership)
+        org_name: Tên đơn vị gửi
+        sender_name: Người ký
+        extra_note: Ghi chú thêm
+    """
+    if not gpt_client:
+        frappe.throw("OPENAI_API_KEY chưa được cấu hình")
+
+    DRAFT_PROMPTS = {
+        "invite_collab":   "Thư mời hợp tác nghiên cứu khoa học",
+        "invite_expert":   "Thư mời tham gia hội đồng chuyên gia phản biện",
+        "invite_project":  "Thư mời tham gia dự án nghiên cứu",
+        "invite_lecture":  "Thư mời giảng dạy hoặc báo cáo chuyên đề",
+        "consult_request": "Công văn đề nghị tư vấn chuyên môn",
+        "partnership":     "Thư đề xuất hợp tác chiến lược dài hạn",
+    }
+
+    doc_label = DRAFT_PROMPTS.get(doc_type, "Thư mời hợp tác")
+    org = org_name or "đơn vị chúng tôi"
+    sender_line = f"Người ký: {sender_name}" if sender_name else ""
+    extra_line = f"Lưu ý thêm: {extra_note}" if extra_note else ""
+
+    prompt = f"""Bạn là chuyên viên soạn thảo văn bản hành chính - ngoại giao chuyên nghiệp.
+Hãy soạn một "{doc_label}" bằng tiếng Việt, trang trọng, chuyên nghiệp và đầy đủ.
+
+Thông tin ứng viên/chuyên gia cần mời:
+{candidate_info}
+
+Đơn vị gửi: {org}
+{sender_line}
+{extra_line}
+
+Yêu cầu:
+- Văn phong lịch sự, trang trọng, đúng phong cách văn bản hành chính Việt Nam
+- Đề cập cụ thể đến lĩnh vực chuyên môn của ứng viên
+- Có đầy đủ: Kính gửi, Nội dung chính, Lời kết, Ký tên
+- Độ dài phù hợp (khoảng 200-350 từ)
+- Để trống [ngày tháng], [địa điểm], [số điện thoại liên hệ] nếu chưa có thông tin"""
+
+    try:
+        response = gpt_client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=1000,
+            temperature=0.7,
+        )
+        draft_text = response.choices[0].message.content
+    except Exception as e:
+        frappe.throw(f"GPT error: {str(e)}")
+
+    return {
+        "doc_type": doc_type,
+        "doc_label": doc_label,
+        "draft": draft_text,
+    }

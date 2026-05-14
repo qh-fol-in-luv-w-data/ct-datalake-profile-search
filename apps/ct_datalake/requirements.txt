@@ -1,3 +1,4 @@
+frappe
 openai
 faiss-cpu
 numpy
@@ -6,3 +7,4 @@ deep-translator
 PyMuPDF
 pypdf
 python-docx
+python-dotenv

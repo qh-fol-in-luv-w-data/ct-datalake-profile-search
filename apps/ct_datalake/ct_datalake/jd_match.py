@@ -21,9 +21,9 @@ from .search import search
 # CONFIG
 # ========================
 OPENAI_MODEL = "gpt-4o-mini"
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 # ========================
 # FIELD MAPPINGS
@@ -266,6 +266,12 @@ Phân tích Job Description (JD) và trả về JSON:
 Trả về JSON thuần.
 """
 
+    if not client:
+        return {
+            "keywords": [],
+            "summary": jd_text[:200]
+        }
+
     response = client.chat.completions.create(
         model=OPENAI_MODEL,
         messages=[
@@ -431,6 +437,9 @@ Trả về JSON:
   ]
 }
 """
+
+    if not client:
+        return candidates[:top_k]
 
     user_content = (
         f"=== JOB DESCRIPTION ===\n{jd_text}\n\n"

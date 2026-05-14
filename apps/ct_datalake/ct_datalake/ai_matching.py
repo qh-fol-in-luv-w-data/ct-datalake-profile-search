@@ -1,9 +1,9 @@
 import os
 import json
+from sentence_transformers import SentenceTransformer
 import faiss
 import fitz  # PyMuPDF
 from openai import OpenAI
-from sentence_transformers import SentenceTransformer
 
 # ============================================================
 # CONFIG – chỉnh tại đây
@@ -115,27 +115,21 @@ def extract_keywords(pdf_path: str, gpt_client: OpenAI) -> list[dict]:
 def load_datasets() -> dict:
     datasets = {}
 
-    if os.path.exists(FAISS_IN) and os.path.exists(META_IN):
-        with open(META_IN, "r", encoding="utf-8") as f:
-            meta = json.load(f)
+    if os.path.exists(FAISS_IN):
         datasets["in"] = {
-            "index":    faiss.read_index(FAISS_IN),
-            "metadata": meta
+            "index": faiss.read_index(FAISS_IN),
+            "source": "Internal"
         }
-        print(f"  ✅ mode=in  : {len(meta)} hồ sơ nội bộ")
     else:
-        print(f"  ⚠️  Không tìm thấy {FAISS_IN} / {META_IN} → bỏ qua mode=in")
+        print(f"  ⚠️  Không tìm thấy {FAISS_IN} → bỏ qua mode=in")
 
-    if os.path.exists(FAISS_OUT) and os.path.exists(META_OUT):
-        with open(META_OUT, "r", encoding="utf-8") as f:
-            meta = json.load(f)
+    if os.path.exists(FAISS_OUT):
         datasets["out"] = {
-            "index":    faiss.read_index(FAISS_OUT),
-            "metadata": meta
+            "index": faiss.read_index(FAISS_OUT),
+            "source": "External"
         }
-        print(f"  ✅ mode=out : {len(meta)} hồ sơ Google Scholar")
     else:
-        print(f"  ⚠️  Không tìm thấy {FAISS_OUT} / {META_OUT} → bỏ qua mode=out")
+        print(f"  ⚠️  Không tìm thấy {FAISS_OUT} → bỏ qua mode=out")
 
     return datasets
 
@@ -146,11 +140,13 @@ def search_faiss(query: str, mode: str, datasets: dict,
     Search một query trong một FAISS index.
     Trả về list[{score, data, mode}].
     """
+    import frappe
+    
     if mode not in datasets:
         return []
 
-    index    = datasets[mode]["index"]
-    metadata = datasets[mode]["metadata"]
+    index = datasets[mode]["index"]
+    db_source = datasets[mode]["source"]
 
     prefix = "query: research interests related to" if mode == "out" else "query:"
     q_vec  = embed_model.encode(
@@ -164,19 +160,43 @@ def search_faiss(query: str, mode: str, datasets: dict,
     seen    = set()
 
     for score, idx in zip(D[0], I[0]):
-        if idx < 0 or idx >= len(metadata):
+        if idx < 0:
             continue
         if score < SCORE_THRESHOLD:
             continue
 
-        item = metadata[idx]
+        idx = int(idx)
+        candidates = frappe.get_all("Candidate", filters={"faiss_id": idx, "source": db_source}, fields=["*"], limit=1)
+        if not candidates:
+            continue
+            
+        candidate = candidates[0]
 
-        # ── FIX: dùng đúng key thực tế trong từng file ──
         if mode == "out":
-            key = item.get("url") or f"{item.get('name')}|{item.get('affiliation')}"
+            data_dict = {
+                "name": candidate.candidate_name,
+                "affiliation": candidate.affiliation,
+                "email": candidate.email,
+                "interests": candidate.interests.split(", ") if candidate.interests else [],
+                "citations": candidate.citations,
+                "h_index": candidate.h_index,
+                "url": candidate.scholar_url,
+                "city": candidate.city,
+                "university_abbr": "",
+                "university_name": candidate.affiliation
+            }
+            key = candidate.scholar_url or f"{candidate.candidate_name}|{candidate.affiliation}"
         else:
-            # metadata.json dùng "trường họ và tên", không có field "id" hay "tên"
-            key = f"{item.get('trường họ và tên')}|{item.get('trường')}"
+            data_dict = {
+                "họ và tên": candidate.candidate_name,
+                "trường họ và tên": candidate.candidate_name,
+                "trường": candidate.affiliation,
+                "học hàm": candidate.hoc_ham,
+                "học vị": candidate.hoc_vi,
+                "chức vụ": candidate.chuc_vu,
+                "sản phẩm thực hiện": candidate.san_pham_thuc_hien
+            }
+            key = f"{candidate.candidate_name}|{candidate.affiliation}"
 
         if key in seen:
             continue
@@ -184,7 +204,7 @@ def search_faiss(query: str, mode: str, datasets: dict,
 
         results.append({
             "score": round(float(score), 4),
-            "data":  item,
+            "data":  data_dict,
             "mode":  mode
         })
 

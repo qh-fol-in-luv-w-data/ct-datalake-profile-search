@@ -10,9 +10,9 @@ from openai import OpenAI
 # CONFIG
 # ========================
 OPENAI_MODEL = "gpt-4o-mini"
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 
-client = OpenAI(api_key=OPENAI_API_KEY)
+client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 BASE_PATH = os.path.dirname(__file__)
 CACHE_FILE = os.path.join(BASE_PATH, "rerank_cache.json")
@@ -144,6 +144,9 @@ def rerank(
     # CACHE MISS
     # ========================
     print("🚀 Calling OpenAI...")
+
+    if not client:
+        return "⚠️ Chưa cấu hình OPENAI_API_KEY. Vui lòng thiết lập biến môi trường."
 
     prompt = build_prompt(
         query,

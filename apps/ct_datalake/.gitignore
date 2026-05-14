@@ -1,0 +1,46 @@
+# ── Secrets ──────────────────────────────────────────────────────────
+.env
+*.env
+.env.*
+
+# ── Python ───────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.so
+
+# ── Large binary / data files (quá lớn cho GitHub, dùng Git LFS hoặc tải riêng) ─
+*.faiss
+*.pkl
+# JSON data lớn (>1MB) — comment nếu muốn track
+ct_datalake/danh_sach_giao_su_tien_si_chuyen_gia_v5.json
+ct_datalake/data_out_translated.json
+ct_datalake/metadata.json
+ct_datalake/metadata_out.json
+ct_datalake/rerank_cache.json
+
+# ── Frontend ──────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# ── macOS ─────────────────────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+
+# ── Editor ────────────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ── Frappe ────────────────────────────────────────────────────────────
+*.pyc
+public/js/
+public/css/
