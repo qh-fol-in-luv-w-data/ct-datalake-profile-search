@@ -29,8 +29,9 @@ bench --site mysite.local install-app ct_datalake
 ```
 
 ### Bước 3. Migrate Database và Tạo DocType
-App đã định nghĩa tự động DocType `Candidate`. Tuy nhiên để chắc chắn cấu trúc được update đầy đủ:
+App đã có sẵn file script tự động khởi tạo bảng Candidate trong Database. Bạn cần chạy lệnh sau để hệ thống tự tạo cấu trúc bảng:
 ```bash
+bench execute ct_datalake.create_doctype.create_candidate_doctype
 bench --site mysite.local migrate
 ```
 
