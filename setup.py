@@ -1,11 +1,14 @@
 from setuptools import setup, find_packages
 
-with open("requirements.txt") as f:
-    install_requires = [
-        line.strip()
-        for line in f
-        if line.strip() and not line.startswith("#") and line.strip() != "frappe"
-    ]
+# Chỉ khai báo thư viện nhẹ — thư viện ML nặng được cài qua requirements.txt riêng
+INSTALL_REQUIRES = [
+    "openai>=1.0.0",
+    "pypdf>=3.0.0",
+    "python-docx>=0.8.11",
+    "python-dotenv>=1.0.0",
+    "deep-translator>=1.9.0",
+    "requests>=2.28.0",
+]
 
 setup(
     name="ct_datalake",
@@ -18,5 +21,6 @@ setup(
     zip_safe=False,
     include_package_data=True,
     python_requires=">=3.10",
-    install_requires=install_requires,
+    install_requires=INSTALL_REQUIRES,
 )
+
