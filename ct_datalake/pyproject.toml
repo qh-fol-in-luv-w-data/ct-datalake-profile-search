@@ -1,0 +1,8 @@
+[tool.ct_template]
+prefix           = "DL"
+module           = "CT DataLake"
+app_name         = "ct_datalake"
+app_slug         = "ct_datalake"
+get_context_file = "ct_datalake/ct_datalake/api.py"
+context_url      = "/api/method/ct_datalake.ct_datalake.api.get_context"
+frontend_src     = "frontend/"

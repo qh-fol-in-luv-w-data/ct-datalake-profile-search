@@ -1,6 +1,7 @@
 import frappe
 import os
 import json
+import uuid
 import tempfile
 from typing import Literal, Optional, List
 from pathlib import Path
@@ -393,3 +394,60 @@ Yêu cầu:
         "doc_label": doc_label,
         "draft": draft_text,
     }
+
+
+# ════════════════════════════════════════════════════════════════════
+# CT Frappe Template — Session & Access Control
+# ════════════════════════════════════════════════════════════════════
+
+from ct_datalake.utils.activity_logger import ActivityLogger, Timer
+
+_logger = ActivityLogger(prefix="DL", module="CT DataLake")
+
+
+def _resolve_session(session_id: str) -> str:
+    """Tìm session_name từ session_id. Fallback trả về chuỗi rỗng."""
+    if not session_id:
+        return ""
+    try:
+        rows = frappe.db.get_all(
+            "DL Session",
+            filters={"session_id": session_id},
+            fields=["name"],
+            limit=1,
+            ignore_permissions=True,  # bắt buộc: bypass DocType read permission
+        )
+        return rows[0].name if rows else ""
+    except Exception:
+        return ""
+
+
+@frappe.whitelist(allow_guest=False)
+def get_context():
+    """
+    Entry point cho Frontend (initSession).
+    - Xác thực quyền qua ct_agent_hub.check_app_access (cookie-based)
+    - Tạo DL Session mới
+    - Trả về csrf_token + session_id + user info
+    """
+    dept = ""
+    role = ""
+    try:
+        from ct_agent_hub.api import check_app_access
+        agents_data = check_app_access("ct_datalake")
+        user_depts = agents_data.get("user_departments", [])
+        dept = ",".join(user_depts) if user_depts else ""
+        role = agents_data.get("user_role", "")
+    except ImportError:
+        pass  # ct_agent_hub chưa được cài đặt
+
+    session_id   = str(uuid.uuid4())
+    session_name = _logger.create_session(session_id, dept=dept, role=role)
+
+    return {
+        "csrf_token":   frappe.sessions.get_csrf_token(),
+        "session_id":   session_id,
+        "session_name": session_name,
+        "user":         frappe.session.user,
+        "full_name":    frappe.utils.get_fullname(frappe.session.user),
+    }

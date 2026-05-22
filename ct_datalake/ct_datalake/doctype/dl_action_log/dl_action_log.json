@@ -1,0 +1,154 @@
+{
+  "actions": [],
+  "autoname": "format:DL-ACT-{YYYY}{MM}{DD}-{######}",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "session", "user", "action_type", "timestamp",
+    "section_input", "input_summary", "input_detail",
+    "section_output", "status", "duration_seconds",
+    "output_summary", "error_message",
+    "section_tokens", "total_tokens", "prompt_tokens", "completion_tokens",
+    "ai_model", "from_cache"
+  ],
+  "fields": [
+    {
+      "fieldname": "session",
+      "fieldtype": "Link",
+      "options": "DL Session",
+      "label": "Session",
+      "in_list_view": 1,
+      "reqd": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "options": "User",
+      "label": "User",
+      "in_list_view": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "action_type",
+      "fieldtype": "Data",
+      "label": "Action Type",
+      "in_list_view": 1,
+      "read_only": 1,
+      "description": "VD: semantic_search, jd_match, g600_analyze, draft_document"
+    },
+    {
+      "fieldname": "timestamp",
+      "fieldtype": "Datetime",
+      "label": "Timestamp",
+      "in_list_view": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_input",
+      "fieldtype": "Section Break",
+      "label": "Input"
+    },
+    {
+      "fieldname": "input_summary",
+      "fieldtype": "Small Text",
+      "label": "Input Summary",
+      "read_only": 1,
+      "description": "Tóm tắt input ngắn"
+    },
+    {
+      "fieldname": "input_detail",
+      "fieldtype": "Code",
+      "options": "JSON",
+      "label": "Input Detail (JSON)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_output",
+      "fieldtype": "Section Break",
+      "label": "Output & Status"
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "success\nfailed\ncached\nrunning",
+      "default": "running",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "duration_seconds",
+      "fieldtype": "Float",
+      "label": "Duration (seconds)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "output_summary",
+      "fieldtype": "Small Text",
+      "label": "Output Summary",
+      "read_only": 1,
+      "description": "500 ký tự đầu của kết quả"
+    },
+    {
+      "fieldname": "error_message",
+      "fieldtype": "Small Text",
+      "label": "Error Message",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_tokens",
+      "fieldtype": "Section Break",
+      "label": "Token Usage"
+    },
+    {
+      "fieldname": "ai_model",
+      "fieldtype": "Data",
+      "label": "AI Model",
+      "read_only": 1
+    },
+    {
+      "fieldname": "from_cache",
+      "fieldtype": "Check",
+      "label": "From Cache",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "prompt_tokens",
+      "fieldtype": "Int",
+      "label": "Prompt Tokens",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "completion_tokens",
+      "fieldtype": "Int",
+      "label": "Completion Tokens",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_tokens",
+      "fieldtype": "Int",
+      "label": "Total Tokens",
+      "in_list_view": 1,
+      "default": "0",
+      "read_only": 1
+    }
+  ],
+  "links": [],
+  "module": "CT DataLake",
+  "name": "DL Action Log",
+  "naming_rule": "Expression (old style)",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1, "delete": 1, "email": 1, "export": 1,
+      "print": 1, "read": 1, "report": 1,
+      "role": "System Manager", "share": 1, "write": 1
+    }
+  ],
+  "sort_field": "timestamp",
+  "sort_order": "DESC",
+  "track_changes": 0
+}
