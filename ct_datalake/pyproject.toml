@@ -1,3 +1,53 @@
+[project]
+name = "ct_datalake"
+authors = [
+    { name = "CT Group", email = "dev@ctgroup.vn" }
+]
+description = "AI Candidate Search System — Semantic Search, JD Matching & G600 Analysis"
+requires-python = ">=3.10"
+readme = "README.md"
+dynamic = ["version"]
+dependencies = [
+    "openai>=1.0.0",
+    "faiss-cpu>=1.7.0",
+    "numpy>=1.24.0",
+    "sentence-transformers>=2.2.0",
+    "deep-translator>=1.9.0",
+    "PyMuPDF>=1.23.0",
+    "pypdf>=3.0.0",
+    "python-docx>=0.8.11",
+    "python-dotenv>=1.0.0",
+]
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.bench.dev-dependencies]
+# package_name = "~=1.1.0"
+
+[deploy.dependencies.apt]
+packages = []
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "B", "RUF"]
+ignore = [
+    "B017", "B018", "B023", "B904",
+    "E101", "E402", "E501", "E741",
+    "F401", "F403", "F405", "F722",
+    "W191",
+]
+typing-modules = ["frappe.types.DF"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "tab"
+docstring-code-format = true
+
 [tool.ct_template]
 prefix           = "DL"
 module           = "CT DataLake"
