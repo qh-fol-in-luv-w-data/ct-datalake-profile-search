@@ -52,7 +52,7 @@ def get_datasets() -> dict:
 # ════════════════════════════════════════════════════════════════════
 
 # ── Health check ────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def root():
     """Kiểm tra trạng thái API"""
     return {
@@ -70,7 +70,7 @@ def root():
         ],
     }
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def health():
     """Health check chi tiết"""
     return {
@@ -81,7 +81,7 @@ def health():
     }
 
 # ── Semantic Search (FAISS) ─────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     """
     Tìm kiếm ứng viên sử dụng FAISS semantic search.
@@ -109,7 +109,7 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     }
 
 # ── Semantic Search (LLM Rerank) ────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     """
     Tìm kiếm FAISS rồi đưa kết quả vào LLM để phân tích.
@@ -144,7 +144,7 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     }
 
 # ── JD Matching (via form fields) ───────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False):
     """
     Match JD với ứng viên.
@@ -171,7 +171,7 @@ def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False)
     }
 
 # ── JD Matching (File Upload) ───────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_match_upload():
     """
     Upload file JD → extract text → match ứng viên.
@@ -223,7 +223,7 @@ def jd_match_upload():
     }
 
 # ── G600 PDF Analysis ────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def g600_analyze():
     """
     Upload PDF tờ trình G600 → GPT-4o Vision đọc và trích xuất lĩnh vực.
@@ -313,7 +313,7 @@ def g600_analyze():
     }
 
 # ── Parse JD only ────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_parse_only(query: str):
     """
     Gửi JD text → GPT phân tích.
@@ -326,7 +326,7 @@ def jd_parse_only(query: str):
         frappe.throw(str(e))
     return {"parsed_jd": parsed}
 # ── Draft Document ────────────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def draft_document(
     candidate_info: str,
     doc_type: str = "invite_collab",
