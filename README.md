@@ -55,3 +55,9 @@ Tất cả API được truy cập qua prefix `/api/method/ct_datalake.ct_datala
 
 ## Ghi chú
 Dự án đã được cấu hình để chạy trong môi trường container với đầy đủ các dependency cho AI (FAISS, PyMuPDF, etc.) và Framework Frappe v15.
+
+# 2. Import dữ liệu cũ vào DocType  
+curl -X POST /api/method/ct_datalake.ct_datalake.api.import_from_json
+# 3. Rebuild FAISS từ DocType
+curl -X POST /api/method/ct_datalake.ct_datalake.api.rebuild_index
+
