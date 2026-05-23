@@ -51,12 +51,12 @@ def get_datasets():
         _datasets = load_datasets()
     return _datasets
 
-@app.get("/api/method/ct_datalake.ct_datalake.api.root")
+@app.get("/api/method/ct_datalake.api.root")
 def root():
     return {"message": {"status": "ok"}}
 
-@app.post("/api/method/ct_datalake.ct_datalake.api.semantic_search")
-@app.get("/api/method/ct_datalake.ct_datalake.api.semantic_search")
+@app.post("/api/method/ct_datalake.api.semantic_search")
+@app.get("/api/method/ct_datalake.api.semantic_search")
 def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     raw = faiss_search(query=query, mode=mode, top_k=top_k)
     results = []
@@ -69,8 +69,8 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
         })
     return {"message": {"query": query, "mode": mode, "total": len(results), "results": results}}
 
-@app.post("/api/method/ct_datalake.ct_datalake.api.semantic_search_llm")
-@app.get("/api/method/ct_datalake.ct_datalake.api.semantic_search_llm")
+@app.post("/api/method/ct_datalake.api.semantic_search_llm")
+@app.get("/api/method/ct_datalake.api.semantic_search_llm")
 def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     raw = faiss_search(query=query, mode=mode, top_k=max(top_k * 2, 10))
     if not raw:
@@ -78,8 +78,8 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     analysis = rerank(query=query, candidates=raw[:top_k], mode=mode)
     return {"message": {"query": query, "mode": mode, "total_found": len(raw), "candidates_sent_to_llm": top_k, "llm_analysis": analysis}}
 
-@app.post("/api/method/ct_datalake.ct_datalake.api.jd_match")
-@app.get("/api/method/ct_datalake.ct_datalake.api.jd_match")
+@app.post("/api/method/ct_datalake.api.jd_match")
+@app.get("/api/method/ct_datalake.api.jd_match")
 def jd_match_api(jd_text: str, mode: str = "in", top_k: int = 5, fast: str = "false"):
     fast_bool = fast.lower() == "true"
     result = match_jd(jd_text=jd_text, mode=mode, top_k=top_k, fast=fast_bool)
@@ -92,7 +92,7 @@ class MockUpload:
     def read(self):
         return self._data
 
-@app.post("/api/method/ct_datalake.ct_datalake.api.jd_match_upload")
+@app.post("/api/method/ct_datalake.api.jd_match_upload")
 async def jd_match_upload(file: UploadFile = File(...), mode: str = Form("in"), top_k: int = Form(5), fast: str = Form("false")):
     content = await file.read()
     fast_bool = fast.lower() == "true"
@@ -100,7 +100,7 @@ async def jd_match_upload(file: UploadFile = File(...), mode: str = Form("in"), 
     result = match_jd(jd_text=jd_text, mode=mode, top_k=top_k, fast=fast_bool)
     return {"message": result}
 
-@app.post("/api/method/ct_datalake.ct_datalake.api.g600_analyze")
+@app.post("/api/method/ct_datalake.api.g600_analyze")
 async def g600_analyze(file: UploadFile = File(...), source: str = Form("both"), top_k: int = Form(5), score_threshold: float = Form(0.40)):
     content = await file.read()
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
@@ -145,8 +145,8 @@ async def g600_analyze(file: UploadFile = File(...), source: str = Form("both"),
         })
     return {"message": {"source": source, "top_k_per_domain": top_k, "score_threshold": score_threshold, "total_domains": len(domain_results), "domains": domain_results}}
 
-@app.post("/api/method/ct_datalake.ct_datalake.api.draft_document")
-@app.get("/api/method/ct_datalake.ct_datalake.api.draft_document")
+@app.post("/api/method/ct_datalake.api.draft_document")
+@app.get("/api/method/ct_datalake.api.draft_document")
 def draft_document(candidate_info: str, doc_type: str = "invite_collab", org_name: str = "", sender_name: str = "", extra_note: str = ""):
     result = create_draft(
         candidate_info=candidate_info,

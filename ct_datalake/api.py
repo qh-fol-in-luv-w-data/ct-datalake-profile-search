@@ -60,13 +60,13 @@ def root():
         "service": "AI Candidate Search API (Frappe)",
         "version": "1.0.0",
         "endpoints": [
-            "/api/method/ct_datalake.ct_datalake.api.root",
-            "/api/method/ct_datalake.ct_datalake.api.health",
-            "/api/method/ct_datalake.ct_datalake.api.semantic_search",
-            "/api/method/ct_datalake.ct_datalake.api.semantic_search_llm",
-            "/api/method/ct_datalake.ct_datalake.api.jd_match",
-            "/api/method/ct_datalake.ct_datalake.api.jd_match_upload",
-            "/api/method/ct_datalake.ct_datalake.api.g600_analyze",
+            "/api/method/ct_datalake.api.root",
+            "/api/method/ct_datalake.api.health",
+            "/api/method/ct_datalake.api.semantic_search",
+            "/api/method/ct_datalake.api.semantic_search_llm",
+            "/api/method/ct_datalake.api.jd_match",
+            "/api/method/ct_datalake.api.jd_match_upload",
+            "/api/method/ct_datalake.api.g600_analyze",
         ],
     }
 
@@ -468,7 +468,7 @@ def rebuild_index(mode: str = "all"):
         frappe.throw("Chỉ System Manager mới có thể rebuild index", frappe.PermissionError)
 
     frappe.enqueue(
-        "ct_datalake.ct_datalake.api._do_rebuild_index",
+        "ct_datalake.api._do_rebuild_index",
         queue="long",
         timeout=1800,
         mode=mode,
@@ -604,7 +604,7 @@ def import_from_json(source: str = "all"):
         frappe.throw("Chỉ System Manager mới có thể import dữ liệu", frappe.PermissionError)
 
     frappe.enqueue(
-        "ct_datalake.ct_datalake.api._do_import_from_json",
+        "ct_datalake.api._do_import_from_json",
         queue="long",
         timeout=3600,
         source=source,

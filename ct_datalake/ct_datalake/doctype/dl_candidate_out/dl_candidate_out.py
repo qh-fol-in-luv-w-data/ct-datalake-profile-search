@@ -1,4 +1,4 @@
 from frappe.model.document import Document
 
-class DlCandidateOut(Document):
+class DLCandidateOut(Document):
     pass

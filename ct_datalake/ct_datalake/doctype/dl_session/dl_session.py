@@ -1,4 +1,4 @@
 from frappe.model.document import Document
 
-class DlSession(Document):
+class DLSession(Document):
     pass

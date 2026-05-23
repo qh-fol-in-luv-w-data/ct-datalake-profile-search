@@ -1,9 +1,9 @@
 import frappe
 import sys
-from ct_datalake.ct_datalake.search import search
+from ct_datalake.search import search
 
 def run():
-    from ct_datalake.ct_datalake.search import search
+    from ct_datalake.search import search
     res = search("machine learning", mode="out", top_k=2)
     print("Results length:", len(res))
     if len(res) > 0:

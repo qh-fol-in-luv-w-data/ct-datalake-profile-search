@@ -34,7 +34,7 @@ docker-compose up --build
 
 ### 3. Truy cập ứng dụng
 - **Giao diện Web (Vue 3)**: [http://localhost](http://localhost) (Port 80)
-- **API Backend (Frappe)**: [http://localhost:8000/api/method/ct_datalake.ct_datalake.api.root](http://localhost:8000/api/method/ct_datalake.ct_datalake.api.root)
+- **API Backend (Frappe)**: [http://localhost:8000/api/method/ct_datalake.api.root](http://localhost:8000/api/method/ct_datalake.api.root)
 
 ## Phát triển Frontend cục bộ
 Nếu bạn muốn phát triển frontend mà không dùng Docker:
@@ -45,7 +45,7 @@ npm run dev
 ```
 
 ## API Endpoints (Frappe)
-Tất cả API được truy cập qua prefix `/api/method/ct_datalake.ct_datalake.api.`:
+Tất cả API được truy cập qua prefix `/api/method/ct_datalake.api.`:
 - `root`: Health check
 - `semantic_search`: Tìm kiếm FAISS
 - `semantic_search_llm`: Tìm kiếm + Rerank LLM

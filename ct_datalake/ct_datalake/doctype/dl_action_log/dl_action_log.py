@@ -1,3 +1,3 @@
 from frappe.model.document import Document
-class DlActionLog(Document):
+class DLActionLog(Document):
     pass
