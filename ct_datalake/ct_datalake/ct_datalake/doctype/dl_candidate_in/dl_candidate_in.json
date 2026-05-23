@@ -1,0 +1,104 @@
+{
+  "actions": [],
+  "autoname": "DL-IN-.#####",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "full_name", "university", "col_break1", "academic_title", "degree",
+    "section_role", "position",
+    "section_expertise", "expertise",
+    "section_meta", "is_active"
+  ],
+  "fields": [
+    {
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "label": "Họ và Tên",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "university",
+      "fieldtype": "Data",
+      "label": "Trường / Đơn vị",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "col_break1",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "academic_title",
+      "fieldtype": "Select",
+      "label": "Học hàm",
+      "options": "\nPhó giáo sư\nGiáo sư",
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "degree",
+      "fieldtype": "Select",
+      "label": "Học vị",
+      "options": "\nThạc sĩ\nTiến sĩ\nKỹ sư\nCử nhân",
+      "in_list_view": 1,
+      "in_standard_filter": 1
+    },
+    {
+      "fieldname": "section_role",
+      "fieldtype": "Section Break",
+      "label": "Chức vụ"
+    },
+    {
+      "fieldname": "position",
+      "fieldtype": "Small Text",
+      "label": "Chức vụ / Vị trí"
+    },
+    {
+      "fieldname": "section_expertise",
+      "fieldtype": "Section Break",
+      "label": "Chuyên môn & Sản phẩm"
+    },
+    {
+      "fieldname": "expertise",
+      "fieldtype": "Text Editor",
+      "label": "Sản phẩm / Chuyên môn",
+      "description": "Mô tả chuyên môn, sản phẩm nghiên cứu — dùng để embedding FAISS"
+    },
+    {
+      "fieldname": "section_meta",
+      "fieldtype": "Section Break",
+      "label": "Trạng thái"
+    },
+    {
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Kích hoạt (đưa vào FAISS index)",
+      "default": "1",
+      "in_list_view": 1
+    }
+  ],
+  "links": [],
+  "module": "CT DataLake",
+  "name": "DL Candidate In",
+  "naming_rule": "Expression (old style)",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1, "delete": 1, "email": 1, "export": 1,
+      "print": 1, "read": 1, "report": 1,
+      "role": "System Manager", "share": 1, "write": 1
+    },
+    {
+      "read": 1, "report": 1, "export": 1,
+      "role": "All"
+    }
+  ],
+  "sort_field": "full_name",
+  "sort_order": "ASC",
+  "track_changes": 1,
+  "title_field": "full_name"
+}
