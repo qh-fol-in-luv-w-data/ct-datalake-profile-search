@@ -18,14 +18,24 @@ BASE_PATH = os.path.dirname(__file__)
 # ========================
 DATASETS = {
     "in": {
-        "index": faiss.read_index(os.path.join(BASE_PATH, "index.faiss")),
-        "source": "Internal"
+        "index": None,
+        "source": "Internal",
+        "path": os.path.join(BASE_PATH, "index.faiss")
     },
     "out": {
-        "index": faiss.read_index(os.path.join(BASE_PATH, "index_out.faiss")),
-        "source": "External"
+        "index": None,
+        "source": "External",
+        "path": os.path.join(BASE_PATH, "index_out.faiss")
     }
 }
+
+for mode, conf in DATASETS.items():
+    if os.path.exists(conf["path"]):
+        try:
+            conf["index"] = faiss.read_index(conf["path"])
+        except Exception as e:
+            print(f"Warning: Could not read FAISS index for {mode}: {e}")
+
 
 # ========================
 # SEARCH
