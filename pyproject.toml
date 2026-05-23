@@ -31,8 +31,7 @@ ml = [
 requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.packages.find]
-where = ["ct_datalake"]
+
 
 [tool.bench.dev-dependencies]
 # package_name = "~=1.1.0"
