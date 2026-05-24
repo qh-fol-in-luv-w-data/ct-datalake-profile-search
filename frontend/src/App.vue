@@ -12,13 +12,8 @@ const { authState } = useSession()
 const currentTab = ref('search')
 
 onMounted(async () => {
+  // session.js tự xử lý việc ẩn splash và hiện #app trong mọi trường hợp
   await initSession('/api/method/ct_datalake.api.get_context')
-  if (authState.value === 'authorized') {
-    // Ẩn static splash screen trong index.html, hiển thị #app
-    const splash = document.getElementById('ct-splash')
-    if (splash) splash.style.display = 'none'
-    document.getElementById('app').style.display = 'block'
-  }
 })
 </script>
 
