@@ -29,12 +29,12 @@ DATASETS = {
     "in": {
         "index": None,
         "source": "Internal",
-        "path": os.path.join(BASE_PATH, "index.faiss")
+        "path": os.path.join(BASE_PATH, "data", "index.faiss")
     },
     "out": {
         "index": None,
         "source": "External",
-        "path": os.path.join(BASE_PATH, "index_out.faiss")
+        "path": os.path.join(BASE_PATH, "data", "index_out.faiss")
     }
 }
 

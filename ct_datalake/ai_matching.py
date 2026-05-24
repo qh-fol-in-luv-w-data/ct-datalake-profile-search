@@ -13,10 +13,10 @@ GPT_MODEL       = "gpt-4o-mini"
 
 BASE_PATH = os.path.dirname(__file__)
 
-FAISS_IN        = os.path.join(BASE_PATH, "index.faiss")
-META_IN         = os.path.join(BASE_PATH, "metadata.json")
-FAISS_OUT       = os.path.join(BASE_PATH, "index_out.faiss")
-META_OUT        = os.path.join(BASE_PATH, "metadata_out.json")
+FAISS_IN        = os.path.join(BASE_PATH, "data", "index.faiss")
+META_IN         = os.path.join(BASE_PATH, "data", "metadata.json")
+FAISS_OUT       = os.path.join(BASE_PATH, "data", "index_out.faiss")
+META_OUT        = os.path.join(BASE_PATH, "data", "metadata_out.json")
 
 PDF_PATH        = "CT_VERSE_Tờ_trình_G600.pdf"
 
