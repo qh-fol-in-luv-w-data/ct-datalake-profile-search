@@ -9,7 +9,16 @@ import os
 # ========================
 MODEL_NAME = "intfloat/multilingual-e5-base"
 SCORE_THRESHOLD = 0.75
-model = SentenceTransformer(MODEL_NAME)
+
+os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
+os.environ["TQDM_DISABLE"] = "1"
+
+_model = None
+def get_model():
+    global _model
+    if _model is None:
+        _model = SentenceTransformer(MODEL_NAME)
+    return _model
 
 BASE_PATH = os.path.dirname(__file__)
 
@@ -59,7 +68,7 @@ def search(query: str, mode: str = "in", top_k: int = 5):
     else:
         q_text = f"query: {query}"
 
-    q_vec = model.encode(
+    q_vec = get_model().encode(
         [q_text],
         normalize_embeddings=True
     ).astype("float32")
