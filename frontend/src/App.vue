@@ -1,15 +1,36 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Search from './components/Search.vue'
 import JDMatch from './components/JDMatch.vue'
 import G600 from './components/G600.vue'
+import CTSplashScreen from './components/CTSplashScreen.vue'
+import CTAccessDenied from './components/CTAccessDenied.vue'
 import { Search as SearchIcon, FileText, ClipboardList } from 'lucide-vue-next'
+import { initSession, useSession } from '@/utils/session'
 
+const { authState } = useSession()
 const currentTab = ref('search')
+
+onMounted(async () => {
+  await initSession('/api/method/ct_datalake.api.get_context')
+  if (authState.value === 'authorized') {
+    // Ẩn static splash screen trong index.html, hiển thị #app
+    const splash = document.getElementById('ct-splash')
+    if (splash) splash.style.display = 'none'
+    document.getElementById('app').style.display = 'block'
+  }
+})
 </script>
 
 <template>
-  <div class="app-container">
+  <!-- Màn hình từ chối quyền truy cập (403) -->
+  <CTAccessDenied v-if="authState === 'denied'" />
+
+  <!-- Splash screen Vue (trong khi đang xác thực - trạng thái loading) -->
+  <CTSplashScreen v-else-if="authState === 'loading'" />
+
+  <!-- Nội dung ứng dụng chính -->
+  <div v-else class="app-container">
     <header class="header">
       <div class="container header-content">
         <div class="logo">

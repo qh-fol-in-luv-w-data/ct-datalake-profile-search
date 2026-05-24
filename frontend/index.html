@@ -1,12 +1,177 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI Candidate Search | CT DataLake</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      /* =====================================================
+       * CT Group Security Pattern — Splash Screen
+       * #app ẩn hoàn toàn trước khi JS load.
+       * Chỉ hiện ra sau khi initSession() xác nhận quyền.
+       * ===================================================== */
+      #app { display: none; }
+
+      #ct-splash {
+        position: fixed; inset: 0;
+        background: radial-gradient(ellipse at 30% 20%, #0d1f3c 0%, #050d1a 50%, #0a0a0f 100%);
+        z-index: 9999999;
+        display: flex; align-items: center; justify-content: center;
+        font-family: 'Inter', sans-serif;
+        overflow: hidden;
+      }
+
+      /* Animated grid */
+      #ct-splash::before {
+        content: '';
+        position: absolute; inset: 0;
+        background-image:
+          linear-gradient(rgba(14,165,233,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(14,165,233,0.05) 1px, transparent 1px);
+        background-size: 48px 48px;
+        animation: ct-grid-fade 4s ease-in-out infinite alternate;
+      }
+      @keyframes ct-grid-fade {
+        from { opacity: 0.5; } to { opacity: 1; }
+      }
+
+      /* Glow orbs */
+      .ct-splash-orb {
+        position: absolute; border-radius: 50%;
+        filter: blur(80px); pointer-events: none;
+        animation: ct-orb-float 10s ease-in-out infinite;
+      }
+      .ct-splash-orb-1 {
+        width: 500px; height: 500px; top: -120px; left: -120px;
+        background: radial-gradient(circle, rgba(14,165,233,0.12) 0%, transparent 70%);
+      }
+      .ct-splash-orb-2 {
+        width: 400px; height: 400px; bottom: -100px; right: -80px;
+        background: radial-gradient(circle, rgba(99,102,241,0.10) 0%, transparent 70%);
+        animation-delay: -5s; animation-duration: 12s;
+      }
+      @keyframes ct-orb-float {
+        0%, 100% { transform: translate(0, 0); }
+        33%  { transform: translate(20px, -15px); }
+        66%  { transform: translate(-10px, 20px); }
+      }
+
+      /* Splash content card */
+      .ct-splash-inner {
+        position: relative; z-index: 1;
+        display: flex; flex-direction: column;
+        align-items: center; gap: 20px;
+        animation: ct-splash-fadein 0.6s ease both;
+      }
+      @keyframes ct-splash-fadein {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Logo ring */
+      .ct-splash-ring {
+        position: relative; width: 72px; height: 72px;
+      }
+      .ct-splash-ring-bg {
+        position: absolute; inset: 0;
+        border-radius: 50%;
+        border: 2px solid rgba(14,165,233,0.15);
+        background: rgba(14,165,233,0.06);
+      }
+      .ct-splash-ring-spin {
+        position: absolute; inset: 0;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        border-top-color: #0ea5e9;
+        border-right-color: rgba(14,165,233,0.3);
+        animation: ct-spin 1s linear infinite;
+      }
+      .ct-splash-ring-spin-slow {
+        position: absolute; inset: 6px;
+        border-radius: 50%;
+        border: 1px solid transparent;
+        border-bottom-color: rgba(99,102,241,0.6);
+        animation: ct-spin 2s linear infinite reverse;
+      }
+      @keyframes ct-spin {
+        to { transform: rotate(360deg); }
+      }
+      /* Icon inside ring */
+      .ct-splash-icon {
+        position: absolute; inset: 0;
+        display: flex; align-items: center; justify-content: center;
+        color: rgba(14,165,233,0.7);
+      }
+
+      /* Text */
+      .ct-splash-text {
+        text-align: center;
+      }
+      .ct-splash-title {
+        font-size: 14px; font-weight: 500;
+        color: rgba(226,232,240,0.9);
+        letter-spacing: 0.01em;
+        margin-bottom: 4px;
+      }
+      .ct-splash-sub {
+        font-size: 12px; font-weight: 400;
+        color: rgba(100,116,139,0.7);
+        letter-spacing: 0.02em;
+      }
+
+      /* Dots loader */
+      .ct-dots {
+        display: flex; gap: 6px;
+      }
+      .ct-dots span {
+        width: 5px; height: 5px; border-radius: 50%;
+        background: #0ea5e9;
+        animation: ct-dot-bounce 1.2s ease-in-out infinite;
+      }
+      .ct-dots span:nth-child(2) { animation-delay: 0.2s; background: rgba(14,165,233,0.7); }
+      .ct-dots span:nth-child(3) { animation-delay: 0.4s; background: rgba(14,165,233,0.4); }
+      @keyframes ct-dot-bounce {
+        0%, 80%, 100% { transform: scale(1); opacity: 0.5; }
+        40% { transform: scale(1.4); opacity: 1; }
+      }
+    </style>
   </head>
   <body>
+    <div id="ct-splash">
+      <div class="ct-splash-orb ct-splash-orb-1"></div>
+      <div class="ct-splash-orb ct-splash-orb-2"></div>
+
+      <div class="ct-splash-inner">
+        <!-- Spinner ring -->
+        <div class="ct-splash-ring">
+          <div class="ct-splash-ring-bg"></div>
+          <div class="ct-splash-ring-spin"></div>
+          <div class="ct-splash-ring-spin-slow"></div>
+          <div class="ct-splash-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="ct-splash-text">
+          <p class="ct-splash-title">Đang xác thực quyền truy cập</p>
+          <p class="ct-splash-sub">CT Group · AI Center</p>
+        </div>
+
+        <!-- Dots -->
+        <div class="ct-dots">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+    </div>
+
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>
