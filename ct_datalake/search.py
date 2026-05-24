@@ -38,14 +38,19 @@ DATASETS = {
     }
 }
 
-for mode, conf in DATASETS.items():
-    if os.path.exists(conf["path"]):
-        try:
-            conf["index"] = faiss.read_index(conf["path"])
-        except Exception as e:
-            print(f"Warning: Could not read FAISS index for {mode}: {e}")
+_indexes_loaded = False
 
-
+def load_indexes():
+    global _indexes_loaded
+    if _indexes_loaded:
+        return
+    for mode, conf in DATASETS.items():
+        if os.path.exists(conf["path"]):
+            try:
+                conf["index"] = faiss.read_index(conf["path"])
+            except Exception as e:
+                print(f"Warning: Could not read FAISS index for {mode}: {e}")
+    _indexes_loaded = True
 # ========================
 # SEARCH
 # ========================
@@ -57,6 +62,8 @@ def search(query: str, mode: str = "in", top_k: int = 5):
     """
     if mode not in DATASETS:
         raise ValueError("mode phải là 'in' hoặc 'out'")
+
+    load_indexes()
 
     index = DATASETS[mode]["index"]
     db_source = DATASETS[mode]["source"]
