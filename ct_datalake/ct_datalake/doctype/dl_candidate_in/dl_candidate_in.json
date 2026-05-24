@@ -33,17 +33,15 @@
     },
     {
       "fieldname": "academic_title",
-      "fieldtype": "Select",
+      "fieldtype": "Data",
       "label": "Học hàm",
-      "options": "\nPhó giáo sư\nGiáo sư",
       "in_list_view": 1,
       "in_standard_filter": 1
     },
     {
       "fieldname": "degree",
-      "fieldtype": "Select",
+      "fieldtype": "Data",
       "label": "Học vị",
-      "options": "\nThạc sĩ\nTiến sĩ\nKỹ sư\nCử nhân",
       "in_list_view": 1,
       "in_standard_filter": 1
     },

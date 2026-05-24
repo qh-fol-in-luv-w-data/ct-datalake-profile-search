@@ -656,7 +656,7 @@ def _do_import_from_json(source: str = "all"):
                     if inserted % 50 == 0:
                         frappe.db.commit()
                 except Exception as e:
-                    frappe.log_error(f"Import IN error [{full_name}]: {e}", "DL Import")
+                    frappe.log_error(title=f"Import IN Error", message=f"[{full_name}]: {e}")
 
             frappe.db.commit()
             frappe.logger().info(f"[DL import_from_json] IN: inserted={inserted}, skipped={skipped}")
@@ -704,7 +704,7 @@ def _do_import_from_json(source: str = "all"):
                     if inserted % 100 == 0:
                         frappe.db.commit()
                 except Exception as e:
-                    frappe.log_error(f"Import OUT error [{name_en}]: {e}", "DL Import")
+                    frappe.log_error(title=f"Import OUT Error", message=f"[{name_en}]: {e}")
 
             frappe.db.commit()
             frappe.logger().info(f"[DL import_from_json] OUT: inserted={inserted}, skipped={skipped}")
