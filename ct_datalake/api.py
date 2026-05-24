@@ -506,9 +506,17 @@ def _do_rebuild_index(mode: str = "all"):
             parts = [str(v) for v in r.values() if v and isinstance(v, (str, int, float))]
             texts.append(" ".join(parts))
 
-        # Encode và build FAISS
+        # Encode và build FAISS (an toàn cho background worker tránh OOM)
+        import os
+        os.environ["TQDM_DISABLE"] = "1"
+        os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
+        
         embeddings = embed_model.encode(
-            texts, normalize_embeddings=True, show_progress_bar=False
+            texts, 
+            batch_size=16, 
+            normalize_embeddings=True, 
+            show_progress_bar=False,
+            device="cpu"
         )
         embeddings = np.array(embeddings, dtype="float32")
         dim = embeddings.shape[1]
