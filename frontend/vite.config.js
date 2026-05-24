@@ -5,6 +5,11 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
   plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+    },
+  },
   // Khi build: base = /assets/ct_datalake/frontend/
   // → Frappe phục vụ tại: /assets/ct_datalake/frontend/index.html
   base: command === 'serve' ? '/' : '/assets/ct_datalake/frontend/',
