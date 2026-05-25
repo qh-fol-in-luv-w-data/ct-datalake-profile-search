@@ -503,7 +503,7 @@ def _do_rebuild_index(mode: str = "all"):
         texts = []
         for r in records:
             parts = [str(v) for v in r.values() if v and isinstance(v, (str, int, float))]
-            texts.append(" ".join(parts))
+            texts.append("passage: " + " ".join(parts))
 
         # Encode và build FAISS (an toàn cho background worker tránh OOM)
         import os
