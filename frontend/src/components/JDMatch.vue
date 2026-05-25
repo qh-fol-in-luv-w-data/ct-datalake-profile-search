@@ -36,11 +36,11 @@ const handleMatch = async () => {
       formData.append('top_k', topK.value)
       formData.append('fast', fastMode.value)
       
-      response = await axios.post('/api/method/ct_datalake.ct_datalake.api.jd_match_upload', formData, {
+      response = await axios.post('/api/method/ct_datalake.api.jd_match_upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
     } else {
-      response = await axios.post('/api/method/ct_datalake.ct_datalake.api.jd_match', null, {
+      response = await axios.post('/api/method/ct_datalake.api.jd_match', null, {
         params: {
           jd_text: jdText.value,
           mode: mode.value,

@@ -67,7 +67,7 @@ async function generateDraft() {
   draftText.value = ''
 
   try {
-    const response = await axios.get('/api/method/ct_datalake.ct_datalake.api.draft_document', {
+    const response = await axios.get('/api/method/ct_datalake.api.draft_document', {
       params: {
         candidate_info: buildCandidateInfo(props.candidate, props.mode),
         doc_type:       selectedType.value,

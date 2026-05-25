@@ -26,7 +26,7 @@ const handleSearch = async () => {
       ? 'semantic_search' 
       : 'semantic_search_llm'
     
-    const response = await axios.get(`/api/method/ct_datalake.ct_datalake.api.${endpoint}`, {
+    const response = await axios.get(`/api/method/ct_datalake.api.${endpoint}`, {
       params: {
         query: query.value,
         mode: mode.value,

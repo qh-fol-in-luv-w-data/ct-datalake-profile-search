@@ -34,7 +34,7 @@ const handleAnalyze = async () => {
     formData.append('top_k', topK.value)
     formData.append('score_threshold', scoreThreshold.value)
 
-    const response = await axios.post('/api/method/ct_datalake.ct_datalake.api.g600_analyze', formData, {
+    const response = await axios.post('/api/method/ct_datalake.api.g600_analyze', formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
 
