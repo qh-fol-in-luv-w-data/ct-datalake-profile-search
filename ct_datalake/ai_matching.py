@@ -4,11 +4,11 @@ from sentence_transformers import SentenceTransformer
 import faiss
 import fitz  # PyMuPDF
 from openai import OpenAI
+from .openai_key import get_openai_client
 
 # ============================================================
 # CONFIG – chỉnh tại đây
 # ============================================================
-OPENAI_API_KEY  = os.getenv("OPENAI_API_KEY", "sk-...")
 GPT_MODEL       = "gpt-4o-mini"
 
 BASE_PATH = os.path.dirname(__file__)
@@ -67,7 +67,7 @@ def _pdf_to_base64_pages(pdf_path: str, dpi: int = 200) -> list[str]:
     return pages
 
 
-def extract_keywords(pdf_path: str, gpt_client: OpenAI) -> list[dict]:
+def extract_keywords(pdf_path: str, get_openai_client(): OpenAI) -> list[dict]:
     """
     Gửi toàn bộ trang PDF dưới dạng ảnh lên GPT-4o Vision.
     GPT đọc tờ trình và trả về JSON keywords của từng lĩnh vực — 1 lần gọi duy nhất.
@@ -89,7 +89,7 @@ def extract_keywords(pdf_path: str, gpt_client: OpenAI) -> list[dict]:
     content.append({"type": "text", "text": VISION_PROMPT})
 
     print("🤖 Gửi lên GPT-4o Vision, đang chờ phân tích...")
-    resp = gpt_client.chat.completions.create(
+    resp = get_openai_client().chat.completions.create(
         model="gpt-4o",
         max_tokens=4096,
         temperature=0,
@@ -273,8 +273,7 @@ def display_candidate(hit: dict, rank: int):
 # MAIN
 # ============================================================
 def main():
-    client = OpenAI(api_key=OPENAI_API_KEY)
-
+    
     print("⏳ Load embedding model (lần đầu có thể mất vài phút)...")
     embed_model = SentenceTransformer(EMBED_MODEL)
 

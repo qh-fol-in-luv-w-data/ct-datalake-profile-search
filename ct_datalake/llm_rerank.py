@@ -5,14 +5,13 @@ import hashlib
 import os
 
 from openai import OpenAI
+from .openai_key import get_openai_client
 
 # ========================
 # CONFIG
 # ========================
 OPENAI_MODEL = "gpt-4o-mini"
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 
-client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 BASE_PATH = os.path.dirname(__file__)
 CACHE_FILE = os.path.join(BASE_PATH, "rerank_cache.json")
@@ -145,7 +144,7 @@ def rerank(
     # ========================
     print("🚀 Calling OpenAI...")
 
-    if not client:
+    if not get_openai_client():
         return "⚠️ Chưa cấu hình OPENAI_API_KEY. Vui lòng thiết lập biến môi trường."
 
     prompt = build_prompt(
@@ -156,7 +155,7 @@ def rerank(
 
     try:
 
-        response = client.chat.completions.create(
+        response = get_openai_client().chat.completions.create(
             model=OPENAI_MODEL,
             messages=[
                 {

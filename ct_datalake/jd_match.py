@@ -14,6 +14,7 @@ import os
 from typing import Literal
 
 from openai import OpenAI
+from .openai_key import get_openai_client
 
 from .search import search
 
@@ -21,9 +22,7 @@ from .search import search
 # CONFIG
 # ========================
 OPENAI_MODEL = "gpt-4o-mini"
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
 
-client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 # ========================
 # FIELD MAPPINGS
@@ -266,13 +265,13 @@ Phân tích Job Description (JD) và trả về JSON:
 Trả về JSON thuần.
 """
 
-    if not client:
+    if not get_openai_client():
         return {
             "keywords": [],
             "summary": jd_text[:200]
         }
 
-    response = client.chat.completions.create(
+    response = get_openai_client().chat.completions.create(
         model=OPENAI_MODEL,
         messages=[
             {"role": "system", "content": system_prompt},
@@ -438,7 +437,7 @@ Trả về JSON:
 }
 """
 
-    if not client:
+    if not get_openai_client():
         return candidates[:top_k]
 
     user_content = (
@@ -449,7 +448,7 @@ Trả về JSON:
         f"{json.dumps(slim, ensure_ascii=False, indent=2)}"
     )
 
-    response = client.chat.completions.create(
+    response = get_openai_client().chat.completions.create(
         model=OPENAI_MODEL,
         messages=[
             {"role": "system", "content": system_prompt},

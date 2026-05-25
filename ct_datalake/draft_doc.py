@@ -1,8 +1,7 @@
 import os
 from openai import OpenAI
+from .openai_key import get_openai_client
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-gpt_client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
 
 def create_draft(
     candidate_info: str,
@@ -11,7 +10,7 @@ def create_draft(
     sender_name: str = "",
     extra_note: str = "",
 ) -> dict:
-    if not gpt_client:
+    if not get_openai_client():
         return {"error": "OPENAI_API_KEY chưa được cấu hình"}
 
     DRAFT_PROMPTS = {
@@ -46,7 +45,7 @@ Yêu cầu:
 - Để trống [ngày tháng], [địa điểm], [số điện thoại liên hệ] nếu chưa có thông tin"""
 
     try:
-        response = gpt_client.chat.completions.create(
+        response = get_openai_client().chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=1000,

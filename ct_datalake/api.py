@@ -25,11 +25,10 @@ from .jd_match import (
 from .ai_matching import extract_keywords, load_datasets, search_domain
 from sentence_transformers import SentenceTransformer
 from openai import OpenAI
+from .openai_key import get_openai_client
 from . import ai_matching as _rc
 
 # ─── OpenAI client ──────────────────────────────────────────────────
-_api_key = os.getenv("OPENAI_API_KEY", "").strip()
-gpt_client = OpenAI(api_key=_api_key) if _api_key else None
 
 # ─── Lazy-load heavy resources once ─────────────────────────────────
 _embed_model: Optional[SentenceTransformer] = None
@@ -114,7 +113,7 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     """
     Tìm kiếm FAISS rồi đưa kết quả vào LLM để phân tích.
     """
-    if not gpt_client:
+    if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa được cấu hình")
 
     try:
@@ -149,7 +148,7 @@ def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False)
     """
     Match JD với ứng viên.
     """
-    if not gpt_client and not frappe.parse_json(fast):
+    if not get_openai_client() and not frappe.parse_json(fast):
         frappe.throw("OPENAI_API_KEY chưa cấu hình. Dùng fast=true để chỉ dùng FAISS.")
 
     try:
@@ -228,7 +227,7 @@ def g600_analyze():
     """
     Upload PDF tờ trình G600 → GPT-4o Vision đọc và trích xuất lĩnh vực.
     """
-    if not gpt_client:
+    if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa được cấu hình")
 
     if not frappe.request.files:
@@ -253,7 +252,7 @@ def g600_analyze():
         tmp_path = tmp.name
 
     try:
-        domains = extract_keywords(tmp_path, gpt_client)
+        domains = extract_keywords(tmp_path, get_openai_client())
     except Exception as e:
         frappe.throw(f"GPT Vision error: {str(e)}")
     finally:
@@ -318,7 +317,7 @@ def jd_parse_only(query: str):
     """
     Gửi JD text → GPT phân tích.
     """
-    if not gpt_client:
+    if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa cấu hình")
     try:
         parsed = parse_jd(query)
@@ -344,7 +343,7 @@ def draft_document(
         sender_name: Người ký
         extra_note: Ghi chú thêm
     """
-    if not gpt_client:
+    if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa được cấu hình")
 
     DRAFT_PROMPTS = {
@@ -379,7 +378,7 @@ Yêu cầu:
 - Để trống [ngày tháng], [địa điểm], [số điện thoại liên hệ] nếu chưa có thông tin"""
 
     try:
-        response = gpt_client.chat.completions.create(
+        response = get_openai_client().chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=1000,
@@ -716,4 +715,4 @@ def _do_import_from_json(source: str = "all"):
 
             frappe.db.commit()
             frappe.logger().info(f"[DL import_from_json] OUT: inserted={inserted}, skipped={skipped}")
-
+
