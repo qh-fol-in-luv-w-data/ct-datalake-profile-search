@@ -9,7 +9,7 @@ import json
 # CONFIG
 # ========================
 MODEL_NAME = "intfloat/multilingual-e5-base"
-SCORE_THRESHOLD = 0.75
+SCORE_THRESHOLD = 0.83
 
 os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
 os.environ["TQDM_DISABLE"] = "1"
