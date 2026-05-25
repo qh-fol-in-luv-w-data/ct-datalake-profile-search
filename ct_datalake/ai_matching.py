@@ -67,7 +67,7 @@ def _pdf_to_base64_pages(pdf_path: str, dpi: int = 200) -> list[str]:
     return pages
 
 
-def extract_keywords(pdf_path: str, get_openai_client(): OpenAI) -> list[dict]:
+def extract_keywords(pdf_path: str, client: OpenAI) -> list[dict]:
     """
     Gửi toàn bộ trang PDF dưới dạng ảnh lên GPT-4o Vision.
     GPT đọc tờ trình và trả về JSON keywords của từng lĩnh vực — 1 lần gọi duy nhất.
