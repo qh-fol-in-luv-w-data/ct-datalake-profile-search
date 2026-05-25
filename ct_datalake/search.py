@@ -3,6 +3,7 @@ import faiss
 import numpy as np
 import frappe
 import os
+import json
 
 # ========================
 # CONFIG
@@ -28,13 +29,15 @@ BASE_PATH = os.path.dirname(__file__)
 DATASETS = {
     "in": {
         "index": None,
-        "source": "Internal",
-        "path": os.path.join(BASE_PATH, "data", "index.faiss")
+        "metadata": None,
+        "path": os.path.join(BASE_PATH, "data", "index.faiss"),
+        "meta_path": os.path.join(BASE_PATH, "data", "metadata.json")
     },
     "out": {
         "index": None,
-        "source": "External",
-        "path": os.path.join(BASE_PATH, "data", "index_out.faiss")
+        "metadata": None,
+        "path": os.path.join(BASE_PATH, "data", "index_out.faiss"),
+        "meta_path": os.path.join(BASE_PATH, "data", "metadata_out.json")
     }
 }
 
@@ -50,15 +53,22 @@ def load_indexes():
                 conf["index"] = faiss.read_index(conf["path"])
             except Exception as e:
                 print(f"Warning: Could not read FAISS index for {mode}: {e}")
+        if os.path.exists(conf["meta_path"]):
+            try:
+                with open(conf["meta_path"], "r", encoding="utf-8") as f:
+                    conf["metadata"] = json.load(f)
+            except Exception as e:
+                print(f"Warning: Could not read metadata for {mode}: {e}")
     _indexes_loaded = True
+
 # ========================
 # SEARCH
 # ========================
 def search(query: str, mode: str = "in", top_k: int = 5):
     """
     mode:
-        in  -> index.faiss + DB (Internal)
-        out -> index_out.faiss + DB (External)
+        in  -> index.faiss + metadata.json (Internal)
+        out -> index_out.faiss + metadata_out.json (External)
     """
     if mode not in DATASETS:
         raise ValueError("mode phải là 'in' hoặc 'out'")
@@ -66,7 +76,11 @@ def search(query: str, mode: str = "in", top_k: int = 5):
     load_indexes()
 
     index = DATASETS[mode]["index"]
-    db_source = DATASETS[mode]["source"]
+    metadata = DATASETS[mode]["metadata"]
+    
+    if index is None or metadata is None:
+        return []
+
     query_lower = query.lower()
 
     # ---------- encode query ----------
@@ -89,50 +103,39 @@ def search(query: str, mode: str = "in", top_k: int = 5):
     seen = set()
 
     for score, idx in zip(D[0], I[0]):
-        if idx < 0:
+        if idx < 0 or idx >= len(metadata):
             continue
         if score < SCORE_THRESHOLD:
             break
 
-        # Query Frappe DB
-        idx = int(idx)
-        # Using faiss_id to find the candidate
-        # Since faiss_id might not be unique globally if we have two sources, we use source filter too.
-        candidates = frappe.get_all("Candidate", filters={"faiss_id": idx, "source": db_source}, fields=["*"], limit=1)
-        
-        if not candidates:
-            continue
-            
-        candidate = candidates[0]
+        candidate = metadata[int(idx)]
 
-        # No strict keyword filtering as FAISS (multilingual-e5) handles semantic matching across languages.
-
-        # Map to old JSON dictionary format to avoid breaking API / jd_match logic
+        # Map to JSON dictionary format to avoid breaking API / jd_match logic
         if mode == "in":
             data_dict = {
-                "họ và tên": candidate.candidate_name,
-                "trường họ và tên": candidate.candidate_name,
-                "trường": candidate.affiliation,
-                "học hàm": candidate.hoc_ham,
-                "học vị": candidate.hoc_vi,
-                "chức vụ": candidate.chuc_vu,
-                "sản phẩm thực hiện": candidate.san_pham_thuc_hien
+                "họ và tên": candidate.get("trường họ và tên", ""),
+                "trường họ và tên": candidate.get("trường họ và tên", ""),
+                "trường": candidate.get("trường", ""),
+                "học hàm": candidate.get("học hàm", ""),
+                "học vị": candidate.get("học vị", ""),
+                "chức vụ": candidate.get("chức vụ", ""),
+                "sản phẩm thực hiện": candidate.get("sản phẩm thực hiện", "")
             }
-            key = f"{candidate.candidate_name}||{candidate.affiliation}||{candidate.chuc_vu}"
+            key = f"{data_dict['họ và tên']}||{data_dict['trường']}||{data_dict['chức vụ']}"
         else:
             data_dict = {
-                "name": candidate.candidate_name,
-                "affiliation": candidate.affiliation,
-                "email": candidate.email,
-                "interests": candidate.interests.split(", ") if candidate.interests else [],
-                "citations": candidate.citations,
-                "h_index": candidate.h_index,
-                "url": candidate.scholar_url,
-                "city": candidate.city,
-                "university_abbr": "", # we didn't save this separately
-                "university_name": candidate.affiliation # map to affiliation
+                "name": candidate.get("name", ""),
+                "affiliation": candidate.get("affiliation", ""),
+                "email": candidate.get("email", ""),
+                "interests": candidate.get("interests", []),
+                "citations": str(candidate.get("citations", 0)),
+                "h_index": str(candidate.get("h_index", 0)),
+                "url": candidate.get("url", ""),
+                "city": candidate.get("city", ""),
+                "university_abbr": candidate.get("university_abbr", ""),
+                "university_name": candidate.get("university_name", "")
             }
-            key = f"{candidate.candidate_name}||{candidate.affiliation}"
+            key = f"{data_dict['name']}||{data_dict['affiliation']}"
 
         if key in seen:
             continue
