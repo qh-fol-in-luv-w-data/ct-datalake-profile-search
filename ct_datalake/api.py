@@ -469,7 +469,7 @@ def rebuild_index(mode: str = "all"):
     frappe.enqueue(
         "ct_datalake.api._do_rebuild_index",
         queue="long",
-        timeout=1800,
+        timeout=43200,
         mode=mode,
     )
     return {"status": "queued", "mode": mode, "message": f"Rebuild index ({mode}) đã được đưa vào hàng đợi"}
