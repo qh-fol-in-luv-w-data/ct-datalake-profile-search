@@ -1,4 +1,4 @@
-﻿import frappe
+import frappe
 import os
 import redis
 import requests
@@ -14,7 +14,7 @@ load_dotenv(dotenv_path=_env_path, override=True)
 # CONFIG
 # ========================
 REDIS_HOST        = "localhost"
-REDIS_PORT        = 6399    # Redis Stack local (mode=in)
+REDIS_PORT        = 6379    # Redis Stack
 INDEX_NAME        = "idx:candidate"
 EXTERNAL_API_KEY   = os.getenv("EXTERNAL_API_KEY", "")
 EXTERNAL_API_URL   = os.getenv("EXTERNAL_API_URL", "http://103.186.101.219/api/professors")
