@@ -5,19 +5,22 @@
     "editable_grid": 1,
     "engine": "InnoDB",
     "field_order": [
-        "openai_section",
-        "openai_api_key",
-        "openai_model",
         "redis_section",
         "redis_host",
         "redis_port",
-        "redis_password"
+        "redis_password",
+        "redis_index_name",
+        "external_api_section",
+        "external_api_key",
+        "external_api_url",
+        "external_fts_url",
+        "internal_api_url"
     ],
     "fields": [
         {
             "fieldname": "redis_section",
             "fieldtype": "Section Break",
-            "label": "Redis"
+            "label": "Redis Stack"
         },
         {
             "default": "localhost",
@@ -36,6 +39,44 @@
             "fieldtype": "Password",
             "label": "Redis Password",
             "description": "Để trống nếu Redis không có mật khẩu"
+        },
+        {
+            "default": "idx:candidate",
+            "fieldname": "redis_index_name",
+            "fieldtype": "Data",
+            "label": "Redis Index Name"
+        },
+        {
+            "fieldname": "external_api_section",
+            "fieldtype": "Section Break",
+            "label": "External API (Search Server)"
+        },
+        {
+            "fieldname": "external_api_key",
+            "fieldtype": "Password",
+            "label": "External API Key",
+            "description": "API key để gọi server search bên ngoài"
+        },
+        {
+            "default": "http://103.186.101.219/api/professors",
+            "fieldname": "external_api_url",
+            "fieldtype": "Data",
+            "label": "External API URL",
+            "description": "URL lấy danh sách professors"
+        },
+        {
+            "default": "http://103.186.101.219/api/search/professors",
+            "fieldname": "external_fts_url",
+            "fieldtype": "Data",
+            "label": "External FTS URL",
+            "description": "URL full-text search professors"
+        },
+        {
+            "default": "http://103.186.101.219/api/search/experts",
+            "fieldname": "internal_api_url",
+            "fieldtype": "Data",
+            "label": "Internal API URL",
+            "description": "URL full-text search experts nội bộ"
         }
     ],
     "issingle": 1,

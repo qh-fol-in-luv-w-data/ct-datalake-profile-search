@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import fitz  # PyMuPDF
 from openai import OpenAI
@@ -6,24 +6,29 @@ import frappe
 import redis
 from redis.commands.search.query import Query
 
+from .ct_datalake_config import (
+    get_redis_host, get_redis_port, get_redis_password,
+    get_redis_index_name,
+)
+
 # ============================================================
-# CONFIG ΓÇô chß╗ënh tß║íi ─æ├óy
+# CONFIG
 # ============================================================
-OPENAI_API_KEY  = os.getenv("OPENAI_API_KEY", "sk-...")
 GPT_MODEL       = "gpt-4o-mini"
 
 BASE_PATH = os.path.dirname(__file__)
-PDF_PATH  = "CT_VERSE_Tß╗¥_tr├¼nh_G600.pdf"
-
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-REDIS_DB = 0
-INDEX_NAME = "idx:candidate"
 
 TOP_K = 5      # sß╗æ ß╗⌐ng vi├¬n trß║ú vß╗ü mß╗ùi l─⌐nh vß╗▒c
 
 def get_redis_client():
-    return redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=REDIS_DB, decode_responses=True)
+    pw = get_redis_password()
+    return redis.Redis(
+        host=get_redis_host(), 
+        port=get_redis_port(), 
+        password=pw or None, 
+        db=0, 
+        decode_responses=True
+    )
 
 # ============================================================
 # STEP 1+2 ΓÇô Gß╗Öp: render PDF ΓåÆ gß╗¡i Vision ΓåÆ trß║ú vß╗ü keywords
@@ -125,7 +130,7 @@ def search_redis(query: str, mode: str, client: redis.Redis) -> list[dict]:
     q = Query(redis_query_str).paging(0, TOP_K * 4).with_scores()
 
     try:
-        res = client.ft(INDEX_NAME).search(q)
+        res = client.ft(get_redis_index_name()).search(q)
     except Exception as e:
         print("Γ¥î Lß╗ùi truy vß║Ñn RediSearch:", e)
         return []
@@ -237,51 +242,3 @@ def display_candidate(hit: dict, rank: int):
         print(f"  Chß╗⌐c vß╗Ñ    : {d.get('chß╗⌐c vß╗Ñ')}")
         sp = d.get('sß║ún phß║⌐m thß╗▒c hiß╗çn', '')
         print(f"  Sß║ún phß║⌐m   : {str(sp)[:120]}")
-
-
-# ============================================================
-# MAIN
-# ============================================================
-def main():
-    gpt_client = OpenAI(api_key=OPENAI_API_KEY)
-
-    try:
-        redis_client = get_redis_client()
-        redis_client.ping()
-        print("Γ£à ─É├ú kß║┐t nß╗æi Redis Stack th├ánh c├┤ng.")
-    except Exception as e:
-        print("Γ¥î Lß╗ùi kß║┐t nß╗æi Redis. Vui l├▓ng c├ái ─æß║╖t v├á chß║íy Redis Stack tr├¬n cß╗òng 6379.")
-        return
-
-    if not os.path.exists(PDF_PATH):
-        print(f"Γ¥î Kh├┤ng t├¼m thß║Ñy: {PDF_PATH}")
-        return
-
-    domains = extract_keywords(PDF_PATH, gpt_client)
-    if not domains:
-        print("Γ¥î GPT kh├┤ng tr├¡ch xuß║Ñt ─æ╞░ß╗úc l─⌐nh vß╗▒c n├áo.")
-        return
-
-    print("\n" + "=" * 65)
-    print("     Kß║╛T QUß║ó ─Éß╗Ç XUß║ñT ß╗¿NG VI├èN ΓÇô Dß╗░ ├üN G600 (REDIS SEARCH)")
-    print("=" * 65)
-
-    for domain in domains:
-        print(f"\n{'ΓöÇ' * 65}")
-        print(f"≡ƒö¼  {domain['name'].upper()}")
-        print(f"{'ΓöÇ' * 65}")
-
-        hits = search_domain(domain, redis_client)
-
-        if not hits:
-            print("  ΓÜá∩╕Å  Kh├┤ng t├¼m thß║Ñy ß╗⌐ng vi├¬n ph├╣ hß╗úp")
-            continue
-
-        for i, hit in enumerate(hits, 1):
-            display_candidate(hit, i)
-
-    print("\n" + "=" * 65)
-    print("Γ£à Ho├án th├ánh")
-
-if __name__ == "__main__":
-    main()

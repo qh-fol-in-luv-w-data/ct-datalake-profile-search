@@ -3,27 +3,25 @@ import os
 import redis
 import requests
 from redis.commands.search.query import Query
-from pathlib import Path
-from dotenv import load_dotenv
 
-# Load .env
-_env_path = Path(__file__).resolve().parent / ".env"
-load_dotenv(dotenv_path=_env_path, override=True)
-
-# ========================
-# CONFIG
-# ========================
-REDIS_HOST        = "localhost"
-REDIS_PORT        = 6379    # Redis Stack
-INDEX_NAME        = "idx:candidate"
-EXTERNAL_API_KEY   = os.getenv("EXTERNAL_API_KEY", "")
-EXTERNAL_API_URL   = os.getenv("EXTERNAL_API_URL", "http://103.186.101.219/api/professors")
-EXTERNAL_FTS_URL   = os.getenv("EXTERNAL_FTS_URL", "http://103.186.101.219/api/search/professors")
-INTERNAL_API_URL   = os.getenv("INTERNAL_FTS_URL", "http://103.186.101.219/api/search/experts")
+from .ct_datalake_config import (
+    get_redis_host, get_redis_port, get_redis_password,
+    get_redis_index_name,
+    get_external_api_key, get_external_api_url,
+    get_external_fts_url, get_internal_api_url,
+)
 
 
 def _get_redis():
-    return redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, decode_responses=True)
+    pw = get_redis_password()
+    return redis.Redis(
+        host=get_redis_host(),
+        port=get_redis_port(),
+        password=pw or None,
+        db=0,
+        decode_responses=True,
+    )
+
 
 
 def _build_redis_query(query: str, source: str, limit: int) -> Query:
@@ -49,8 +47,8 @@ def _search_external(query: str, top_k: int) -> list:
     """Gß╗ìi BM25 search endpoint tr├¬n server (Redis Stack + synonyms server-side)."""
     try:
         resp = requests.get(
-            EXTERNAL_FTS_URL,
-            headers={"X-API-Key": EXTERNAL_API_KEY},
+            get_external_fts_url(),
+            headers={"X-API-Key": get_external_api_key()},
             params={"q": query, "limit": top_k},
             timeout=10,
         )
@@ -89,8 +87,8 @@ def _search_internal(query: str, top_k: int) -> list:
     """T├¼m kiß║┐m nß╗Öi bß╗Ö: gß╗ìi /professors/experts tr├¬n server."""
     try:
         resp = requests.get(
-            INTERNAL_API_URL,
-            headers={"X-API-Key": EXTERNAL_API_KEY},
+            get_internal_api_url(),
+            headers={"X-API-Key": get_external_api_key()},
             params={"q": query, "limit": top_k},
             timeout=10,
         )
