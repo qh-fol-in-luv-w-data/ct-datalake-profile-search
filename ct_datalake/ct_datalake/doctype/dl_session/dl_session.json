@@ -1,0 +1,133 @@
+{
+  "actions": [],
+  "autoname": "format:DL-SESSION-{YYYY}-{MM}-{DD}-{######}",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "session_id", "user", "ip_address", "user_agent",
+    "department", "role_param", "started_at", "last_active_at",
+    "section_stats",
+    "total_actions", "total_ai_calls", "total_tokens_used",
+    "total_prompt_tokens", "total_completion_tokens", "status"
+  ],
+  "fields": [
+    {
+      "fieldname": "session_id",
+      "fieldtype": "Data",
+      "label": "Session ID",
+      "in_list_view": 1,
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "options": "User",
+      "label": "User",
+      "in_list_view": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "ip_address",
+      "fieldtype": "Data",
+      "label": "IP Address",
+      "read_only": 1
+    },
+    {
+      "fieldname": "user_agent",
+      "fieldtype": "Small Text",
+      "label": "User Agent",
+      "read_only": 1
+    },
+    {
+      "fieldname": "department",
+      "fieldtype": "Data",
+      "label": "Department (URL param)",
+      "in_list_view": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "role_param",
+      "fieldtype": "Data",
+      "label": "Role (URL param)",
+      "read_only": 1
+    },
+    {
+      "fieldname": "started_at",
+      "fieldtype": "Datetime",
+      "label": "Started At",
+      "in_list_view": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "last_active_at",
+      "fieldtype": "Datetime",
+      "label": "Last Active At",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_stats",
+      "fieldtype": "Section Break",
+      "label": "Statistics"
+    },
+    {
+      "fieldname": "total_actions",
+      "fieldtype": "Int",
+      "label": "Total Actions",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_ai_calls",
+      "fieldtype": "Int",
+      "label": "Total AI Calls",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_tokens_used",
+      "fieldtype": "Int",
+      "label": "Total Tokens Used",
+      "in_list_view": 1,
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_prompt_tokens",
+      "fieldtype": "Int",
+      "label": "Prompt Tokens",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "total_completion_tokens",
+      "fieldtype": "Int",
+      "label": "Completion Tokens",
+      "default": "0",
+      "read_only": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "active\ncompleted",
+      "default": "active",
+      "in_list_view": 1
+    }
+  ],
+  "links": [],
+  "module": "CT DataLake",
+  "name": "DL Session",
+  "naming_rule": "Expression (old style)",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1, "delete": 1, "email": 1, "export": 1,
+      "print": 1, "read": 1, "report": 1,
+      "role": "System Manager", "share": 1, "write": 1
+    }
+  ],
+  "sort_field": "started_at",
+  "sort_order": "DESC",
+  "track_changes": 0
+}
