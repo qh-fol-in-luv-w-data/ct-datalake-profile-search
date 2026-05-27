@@ -1,155 +1,141 @@
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
-import frappe
+﻿import frappe
 import os
-import json
+import redis
+import requests
+from redis.commands.search.query import Query
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env
+_env_path = Path(__file__).resolve().parent / ".env"
+load_dotenv(dotenv_path=_env_path, override=True)
 
 # ========================
 # CONFIG
 # ========================
-MODEL_NAME = "intfloat/multilingual-e5-base"
-SCORE_THRESHOLD = 0.83
+REDIS_HOST        = "localhost"
+REDIS_PORT        = 6399    # Redis Stack local (mode=in)
+INDEX_NAME        = "idx:candidate"
+EXTERNAL_API_KEY   = os.getenv("EXTERNAL_API_KEY", "")
+EXTERNAL_API_URL   = os.getenv("EXTERNAL_API_URL", "http://103.186.101.219/api/professors")
+EXTERNAL_FTS_URL   = os.getenv("EXTERNAL_FTS_URL", "http://103.186.101.219/api/search/professors")
+INTERNAL_API_URL   = os.getenv("INTERNAL_FTS_URL", "http://103.186.101.219/api/search/experts")
 
-os.environ["HF_HUB_DISABLE_PROGRESS_BARS"] = "1"
-os.environ["TQDM_DISABLE"] = "1"
 
-_model = None
-def get_model():
-    global _model
-    if _model is None:
-        _model = SentenceTransformer(MODEL_NAME)
-    return _model
+def _get_redis():
+    return redis.Redis(host=REDIS_HOST, port=REDIS_PORT, db=0, decode_responses=True)
 
-BASE_PATH = os.path.dirname(__file__)
 
-# ========================
-# LOAD 2 MODE FAISS INDEX
-# ========================
-DATASETS = {
-    "in": {
-        "index": None,
-        "metadata": None,
-        "path": os.path.join(BASE_PATH, "data", "index.faiss"),
-        "meta_path": os.path.join(BASE_PATH, "data", "metadata.json")
-    },
-    "out": {
-        "index": None,
-        "metadata": None,
-        "path": os.path.join(BASE_PATH, "data", "index_out.faiss"),
-        "meta_path": os.path.join(BASE_PATH, "data", "metadata_out.json")
-    }
-}
+def _build_redis_query(query: str, source: str, limit: int) -> Query:
+    """Tß║ío BM25 OR-query cho RediSearch, lß╗ìc theo source tag."""
+    safe  = query.replace("(","").replace(")","").replace(":","").replace("-"," ")
+    words = [w for w in safe.split() if w.strip()]
+    or_q  = " | ".join(words) if words else "*"
+    return Query(f"(@source:{{{source}}}) ({or_q})").paging(0, limit).with_scores()
 
-_indexes_loaded = False
 
-def load_indexes():
-    global _indexes_loaded
-    if _indexes_loaded:
-        return
-    for mode, conf in DATASETS.items():
-        if os.path.exists(conf["path"]):
-            try:
-                conf["index"] = faiss.read_index(conf["path"])
-            except Exception as e:
-                print(f"Warning: Could not read FAISS index for {mode}: {e}")
-        if os.path.exists(conf["meta_path"]):
-            try:
-                with open(conf["meta_path"], "r", encoding="utf-8") as f:
-                    conf["metadata"] = json.load(f)
-            except Exception as e:
-                print(f"Warning: Could not read metadata for {mode}: {e}")
-    _indexes_loaded = True
+def _normalize(docs):
+    """Chuß║⌐n h├│a BM25 score vß╗ü thang 0-1."""
+    if not docs:
+        return []
+    max_score = float(docs[0].score) or 1.0
+    return [(round(float(d.score) / max_score, 4), d) for d in docs]
+
 
 # ========================
-# SEARCH
+# MODE = OUT: gß╗ìi server /professors/fts
 # ========================
-def search(query: str, mode: str = "in", top_k: int = 5):
-    """
-    mode:
-        in  -> index.faiss + metadata.json (Internal)
-        out -> index_out.faiss + metadata_out.json (External)
-    """
-    if mode not in DATASETS:
-        raise ValueError("mode phải là 'in' hoặc 'out'")
-
-    load_indexes()
-
-    index = DATASETS[mode]["index"]
-    metadata = DATASETS[mode]["metadata"]
-    
-    if index is None or metadata is None:
+def _search_external(query: str, top_k: int) -> list:
+    """Gß╗ìi BM25 search endpoint tr├¬n server (Redis Stack + synonyms server-side)."""
+    try:
+        resp = requests.get(
+            EXTERNAL_FTS_URL,
+            headers={"X-API-Key": EXTERNAL_API_KEY},
+            params={"q": query, "limit": top_k},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data  = resp.json()
+        # Server trß║ú vß╗ü {"total": N, "results": [...]} hoß║╖c list trß╗▒c tiß║┐p
+        items = data.get("results", data) if isinstance(data, dict) else data
+    except Exception as e:
+        frappe.logger().warning(f"[search] External FTS error: {e}")
         return []
 
-    query_lower = query.lower()
+    return [
+        {
+            "score": item.get("score", 0.0),
+            "data": {
+                "name":            item.get("name", ""),
+                "affiliation":     item.get("affiliation", ""),
+                "email":           item.get("email", ""),
+                "interests":       item.get("interests", []),
+                "citations":       item.get("citations", 0),
+                "h_index":         item.get("h_index", 0),
+                "url":             item.get("url", ""),
+                "city":            item.get("city", ""),
+                "university_abbr": item.get("university_abbr", ""),
+                "university_name": item.get("university_name", ""),
+            },
+        }
+        for item in items
+    ]
 
-    # ---------- encode query ----------
-    if mode == "out":
-        q_text = f"query: research interests related to {query}"
-    else:
-        q_text = f"query: {query}"
 
-    q_vec = get_model().encode(
-        [q_text],
-        normalize_embeddings=True
-    ).astype("float32")
-
-    D, I = index.search(q_vec, top_k * 5)
-
-    if len(D[0]) == 0 or D[0][0] < SCORE_THRESHOLD:
+# ========================
+# MODE = IN: gß╗ìi server /professors/experts
+# ========================
+def _search_internal(query: str, top_k: int) -> list:
+    """T├¼m kiß║┐m nß╗Öi bß╗Ö: gß╗ìi /professors/experts tr├¬n server."""
+    try:
+        resp = requests.get(
+            INTERNAL_API_URL,
+            headers={"X-API-Key": EXTERNAL_API_KEY},
+            params={"q": query, "limit": top_k},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        items = resp.json()
+        if isinstance(items, dict):
+            items = items.get("results", items.get("data", []))
+    except Exception as e:
+        frappe.logger().warning(f"[search] Internal API error: {e}")
         return []
 
     results = []
-    seen = set()
-
-    for score, idx in zip(D[0], I[0]):
-        if idx < 0 or idx >= len(metadata):
-            continue
-        if score < SCORE_THRESHOLD:
-            break
-
-        candidate = metadata[int(idx)]
-
-        # Map to JSON dictionary format to avoid breaking API / jd_match logic
-        if mode == "in":
-            data_dict = {
-                "họ và tên": candidate.get("trường họ và tên", ""),
-                "trường họ và tên": candidate.get("trường họ và tên", ""),
-                "trường": candidate.get("trường", ""),
-                "học hàm": candidate.get("học hàm", ""),
-                "học vị": candidate.get("học vị", ""),
-                "chức vụ": candidate.get("chức vụ", ""),
-                "sản phẩm thực hiện": candidate.get("sản phẩm thực hiện", "")
-            }
-            key = f"{data_dict['họ và tên']}||{data_dict['trường']}||{data_dict['chức vụ']}"
-        else:
-            data_dict = {
-                "name": candidate.get("name", ""),
-                "affiliation": candidate.get("affiliation", ""),
-                "email": candidate.get("email", ""),
-                "interests": candidate.get("interests", []),
-                "citations": str(candidate.get("citations", 0)),
-                "h_index": str(candidate.get("h_index", 0)),
-                "url": candidate.get("url", ""),
-                "city": candidate.get("city", ""),
-                "university_abbr": candidate.get("university_abbr", ""),
-                "university_name": candidate.get("university_name", "")
-            }
-            key = f"{data_dict['name']}||{data_dict['affiliation']}"
-
-        if key in seen:
-            continue
-        seen.add(key)
-
+    for item in items:
         results.append({
-            "score": float(score),
-            "data": data_dict
+            "score": item.get("score", 0.0),
+            "data": {
+                "id":               item.get("id", ""),
+                "m├ú sß╗æ":            item.get("code", ""),
+                "hß╗ì v├á t├¬n":        item.get("name", ""),
+                "chuy├¬n ng├ánh":     item.get("specialization", ""),
+                "khoa/ph├▓ng ban":   item.get("department", ""),
+                "hß╗ìc h├ám":          item.get("academic_rank", ""),
+                "hß╗ìc vß╗ï":           item.get("degree", ""),
+                "email":            item.get("email", ""),
+                "─æiß╗çn thoß║íi":       item.get("phone", ""),
+                "trß║íng th├íi":       item.get("active_status", ""),
+                "mß╗⌐c hß╗úp t├íc":      item.get("cooperation_level", ""),
+            },
         })
-
-        if len(results) >= top_k:
-            break
-
     return results
 
-if __name__ == "__main__":
-    pass
+
+# ========================
+# PUBLIC API
+# ========================
+def search(query: str, mode: str = "in", top_k: int = 5) -> list:
+    """
+    T├¼m kiß║┐m BM25 theo mode:
+        in  ΓåÆ Internal candidates (local Redis + Frappe DB)
+        out ΓåÆ External professors (server Redis Stack + synonyms)
+    """
+    if mode not in ("in", "out"):
+        raise ValueError("mode phß║úi l├á 'in' hoß║╖c 'out'")
+
+    if mode == "out":
+        return _search_external(query, top_k)
+
+    return _search_internal(query, top_k)

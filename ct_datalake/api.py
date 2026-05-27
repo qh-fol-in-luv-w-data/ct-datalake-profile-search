@@ -14,7 +14,7 @@ if not _env_path.exists():
 load_dotenv(dotenv_path=_env_path, override=True)
 
 # ─── internal modules ───────────────────────────────────────────────
-from .search import search as faiss_search
+from .search import search as bm25_search
 from .llm_rerank import rerank
 from .jd_match import (
     match_jd,
@@ -22,7 +22,7 @@ from .jd_match import (
     parse_jd,
     extract_text_from_upload as _extract_text,
 )
-from .ai_matching import extract_keywords, search_domain
+from .ai_matching import extract_keywords, search_domain, get_redis_client
 from openai import OpenAI
 from .openai_key import get_openai_client
 from . import ai_matching as _rc
@@ -68,7 +68,7 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     """
     try:
         top_k = int(top_k)
-        raw = faiss_search(query=query, mode=mode, top_k=top_k)
+        raw = bm25_search(query=query, mode=mode, top_k=top_k)
     except Exception as e:
         frappe.throw(f"Search error: {str(e)}")
 
@@ -99,7 +99,7 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
 
     try:
         top_k = int(top_k)
-        raw = faiss_search(
+        raw = bm25_search(
             query=query,
             mode=mode,
             top_k=max(top_k * 2, 10)
@@ -243,25 +243,22 @@ def g600_analyze():
     if not domains:
         frappe.throw("GPT không trích xuất được lĩnh vực nào từ PDF")
 
-    datasets = get_datasets()
-    embed_model = get_embed_model()
-
-    if source == "in":
-        active = {k: v for k, v in datasets.items() if k == "in"}
-    elif source == "out":
-        active = {k: v for k, v in datasets.items() if k == "out"}
-    else:
-        active = datasets
-
-    if not active:
-        frappe.throw("Không tìm thấy FAISS index. Kiểm tra file index.faiss / index_out.faiss")
+    try:
+        redis_client = get_redis_client()
+        redis_client.ping()
+    except Exception:
+        frappe.throw("Không thể kết nối đến Redis Stack")
 
     _rc.TOP_K = top_k
-    _rc.SCORE_THRESHOLD = score_threshold
 
     domain_results = []
     for domain in domains:
-        hits = search_domain(domain, active, embed_model)
+        all_hits = search_domain(domain, redis_client)
+        # Filter by source
+        if source in ["in", "out"]:
+            hits = [h for h in all_hits if h["mode"] == source]
+        else:
+            hits = all_hits
         candidates = []
         for hit in hits:
             d = hit["data"]
