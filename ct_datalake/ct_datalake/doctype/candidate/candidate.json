@@ -1,0 +1,144 @@
+{
+ "actions": [],
+ "creation": "2026-05-27 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "candidate_name",
+  "source",
+  "affiliation",
+  "email",
+  "faiss_id",
+  "internal_section",
+  "hoc_ham",
+  "hoc_vi",
+  "chuc_vu",
+  "san_pham_thuc_hien",
+  "external_section",
+  "interests",
+  "citations",
+  "h_index",
+  "scholar_url",
+  "city"
+ ],
+ "fields": [
+  {
+   "fieldname": "candidate_name",
+   "fieldtype": "Data",
+   "label": "Candidate Name",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "label": "Source",
+   "options": "Internal\nExternal",
+   "reqd": 1,
+   "in_list_view": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "affiliation",
+   "fieldtype": "Small Text",
+   "label": "Affiliation / Trường",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "faiss_id",
+   "fieldtype": "Int",
+   "label": "FAISS ID",
+   "description": "ID tương ứng trong FAISS index",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "internal_section",
+   "fieldtype": "Section Break",
+   "label": "Thông tin Nội bộ (Internal)"
+  },
+  {
+   "fieldname": "hoc_ham",
+   "fieldtype": "Data",
+   "label": "Học Hàm"
+  },
+  {
+   "fieldname": "hoc_vi",
+   "fieldtype": "Data",
+   "label": "Học Vị"
+  },
+  {
+   "fieldname": "chuc_vu",
+   "fieldtype": "Small Text",
+   "label": "Chức Vụ"
+  },
+  {
+   "fieldname": "san_pham_thuc_hien",
+   "fieldtype": "Text",
+   "label": "Sản phẩm thực hiện / Chuyên môn"
+  },
+  {
+   "fieldname": "external_section",
+   "fieldtype": "Section Break",
+   "label": "Thông tin Bên ngoài (External / Google Scholar)"
+  },
+  {
+   "fieldname": "interests",
+   "fieldtype": "Text",
+   "label": "Interests"
+  },
+  {
+   "fieldname": "citations",
+   "fieldtype": "Int",
+   "label": "Citations"
+  },
+  {
+   "fieldname": "h_index",
+   "fieldtype": "Int",
+   "label": "H-Index"
+  },
+  {
+   "fieldname": "scholar_url",
+   "fieldtype": "Small Text",
+   "label": "Scholar URL"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  }
+ ],
+ "issingle": 0,
+ "links": [],
+ "modified": "2026-05-27 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ct Datalake",
+ "name": "Candidate",
+ "owner": "Administrator",
+ "autoname": "hash",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 0,
+   "export": 1,
+   "print": 0,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 0,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}

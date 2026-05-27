@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "creation": "2026-05-27 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "openai_section",
+  "openai_api_key",
+  "openai_model",
+  "redis_section",
+  "redis_host",
+  "redis_port",
+  "redis_password"
+ ],
+ "fields": [
+  {
+   "fieldname": "openai_section",
+   "fieldtype": "Section Break",
+   "label": "OpenAI"
+  },
+  {
+   "fieldname": "openai_api_key",
+   "fieldtype": "Password",
+   "label": "OpenAI API Key",
+   "description": "sk-proj-... (lưu trữ mã hoá trong database, không commit lên git)",
+   "reqd": 0
+  },
+  {
+   "default": "gpt-4o",
+   "fieldname": "openai_model",
+   "fieldtype": "Select",
+   "label": "OpenAI Model",
+   "options": "gpt-4o\ngpt-4o-mini\ngpt-3.5-turbo"
+  },
+  {
+   "fieldname": "redis_section",
+   "fieldtype": "Section Break",
+   "label": "Redis"
+  },
+  {
+   "default": "localhost",
+   "fieldname": "redis_host",
+   "fieldtype": "Data",
+   "label": "Redis Host"
+  },
+  {
+   "default": "6379",
+   "fieldname": "redis_port",
+   "fieldtype": "Int",
+   "label": "Redis Port"
+  },
+  {
+   "fieldname": "redis_password",
+   "fieldtype": "Password",
+   "label": "Redis Password",
+   "description": "Để trống nếu Redis không có mật khẩu"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-05-27 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Ct Datalake",
+ "name": "CT DataLake Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 0,
+   "export": 0,
+   "print": 0,
+   "read": 1,
+   "report": 0,
+   "role": "System Manager",
+   "share": 0,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 0
+}
