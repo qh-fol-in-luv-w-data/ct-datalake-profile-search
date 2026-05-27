@@ -64,7 +64,9 @@ def health():
 @frappe.whitelist(allow_guest=False)
 def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     """
-    Tìm kiếm ứng viên sử dụng FAISS semantic search.
+    Tìm kiếm ứng viên BM25:
+      mode=in  → Internal (local Redis + Frappe DB)
+      mode=out → External (server Redis Stack + synonyms)
     """
     try:
         top_k = int(top_k)
@@ -92,7 +94,7 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
 @frappe.whitelist(allow_guest=False)
 def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     """
-    Tìm kiếm FAISS rồi đưa kết quả vào LLM để phân tích.
+    BM25 search rồi đưa kết quả vào LLM server-side để phân tích.
     """
     if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa được cấu hình")
@@ -130,7 +132,7 @@ def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False)
     Match JD với ứng viên.
     """
     if not get_openai_client() and not frappe.parse_json(fast):
-        frappe.throw("OPENAI_API_KEY chưa cấu hình. Dùng fast=true để chỉ dùng FAISS.")
+        frappe.throw("OPENAI_API_KEY chưa cấu hình. Dùng fast=true để chỉ dùng RediSearch.")
 
     try:
         top_k = int(top_k)
