@@ -395,6 +395,235 @@ Yêu cầu:
     }
 
 
+# ── AI Candidate Persona Report ──────────────────────────────────
+@frappe.whitelist(allow_guest=True)
+def generate_candidate_report(
+    ai_test_url: str,
+    g5_test_url: str,
+    eq_test_url: str,
+    survey_url: str = "",
+    jd_text: str = "",
+):
+    """
+    Pipeline tạo AI Candidate Persona Report.
+
+    Params (tất cả đều là string, không hard-code):
+        ai_test_url  : Link Odoo survey print – bài test AI
+        g5_test_url  : Link Odoo survey print – bài test 5G
+        eq_test_url  : Link jobtest.vn – bài EQ/IQ
+        survey_url   : Link phiếu đánh giá phỏng vấn (có thể trống)
+        jd_text      : Nội dung JD (string)
+
+    CV được upload qua frappe.request.files['cv_file'] (pdf/docx).
+
+    Returns: dict chứa toàn bộ fields + doctype_name đã lưu.
+    """
+    import warnings, requests
+    import PyPDF2, io
+    from bs4 import BeautifulSoup
+    from docx import Document as DocxDocument
+    from pathlib import Path
+
+    warnings.filterwarnings("ignore")
+
+    _client = get_openai_client()
+    if not _client:
+        frappe.throw("OPENAI_API_KEY chưa được cấu hình")
+
+    BASE_DIR = Path(__file__).resolve().parent.parent / "AI_ATS"
+    # fallback nếu không tìm thấy
+    if not BASE_DIR.exists():
+        BASE_DIR = Path("/Users/_qh.fol_/AI_ATS")
+
+    AI_SCORING_PDF  = BASE_DIR / "CTG-KNC-TD-QĐ04.BM02-HƯỚNG DẪN CHẤM ĐIỂM BÀI TEST NĂNG LỰC AI (1).pdf"
+    SWAT_PRD_DOCX   = BASE_DIR / "18052026_RD - PRD - AI Candidate Persona Report.docx"
+    G5_SCORING_DOCX = BASE_DIR / "CTG-KNC-TD-QT01.BM16 - Bộ CÂU HỎI ĐÁNH GIÁ TIỀM NĂNG ỨNG VIÊN 2 1 (2).docx"
+
+    # ── Helpers ──────────────────────────────────────────────────────
+    def _read_pdf_bytes(data: bytes) -> str:
+        reader = PyPDF2.PdfReader(io.BytesIO(data))
+        return "\n".join(pg.extract_text() or "" for pg in reader.pages).strip()
+
+    def _read_docx_bytes(data: bytes) -> str:
+        doc = DocxDocument(io.BytesIO(data))
+        parts = [p.text for p in doc.paragraphs if p.text.strip()]
+        for i, tbl in enumerate(doc.tables):
+            parts.append(f"[TABLE {i+1}]")
+            for row in tbl.rows:
+                parts.append(" | ".join(c.text.strip() for c in row.cells))
+        return "\n".join(parts).strip()
+
+    def _read_pdf_path(path: Path) -> str:
+        return _read_pdf_bytes(path.read_bytes()) if path.exists() else ""
+
+    def _read_docx_path(path: Path) -> str:
+        return _read_docx_bytes(path.read_bytes()) if path.exists() else ""
+
+    def _scrape(url: str) -> str:
+        if not url:
+            return "[Chưa có]"
+        try:
+            resp = requests.get(url, timeout=20, verify=False)
+            soup = BeautifulSoup(resp.text, "html.parser")
+            for tag in soup(["script", "style", "nav", "footer", "header"]):
+                tag.decompose()
+            text = soup.get_text(separator="\n", strip=True)
+            return text if len(text) > 100 else f"[Nội dung rỗng: {url}]"
+        except Exception as e:
+            return f"[Lỗi scrape: {e}]"
+
+    # ── Đọc CV từ upload ─────────────────────────────────────────────
+    cv_text = ""
+    if frappe.request.files:
+        cv_file = frappe.request.files.get("cv_file")
+        if cv_file:
+            raw = cv_file.stream.read()
+            fname = (cv_file.filename or "").lower()
+            if fname.endswith(".pdf"):
+                cv_text = _read_pdf_bytes(raw)
+            elif fname.endswith(".docx"):
+                cv_text = _read_docx_bytes(raw)
+
+    # ── Scrape test links ────────────────────────────────────────────
+    ai_test_text = _scrape(ai_test_url)
+    g5_test_text = _scrape(g5_test_url)
+    eq_test_text = _scrape(eq_test_url)
+    survey_text  = _scrape(survey_url) if survey_url else "[Chưa có]"
+
+    # ── Internal scoring guides ──────────────────────────────────────
+    ai_scoring = _read_pdf_path(AI_SCORING_PDF)
+    swat_prd   = _read_docx_path(SWAT_PRD_DOCX)
+    g5_scoring = _read_docx_path(G5_SCORING_DOCX)
+
+    # ── Build prompts ────────────────────────────────────────────────
+    SYSTEM = """Bạn là AI Agent đánh giá ứng viên cho CT Group (NoAI-NoHire).
+Áp dụng ĐÚNG 2 bộ tiêu chí:
+
+Bộ 1 – ĐIỂM BÀI TEST AI (10 câu × 10đ = 100đ)
+Chấm từng câu theo AI_SCORING_GUIDE.
+Ngưỡng: ≥75 Xuất sắc | 60-74 Khá (AI-Ready) | 50-59 Theo dõi | <50 Non-AI
+
+Bộ 2 – SWAT ELITE (4 trụ cột, thang 0-10, trọng số 50/20/20/10%)
+Tổng trọng số ≥6.0/10 → SWAT Elite ĐẠT
+
+CHỈ trả về JSON hợp lệ theo schema sau:
+{
+  "candidate_name": "string",
+  "position": "string",
+  "email": "string",
+  "phone": "string",
+  "ai_test_table": [
+    {"cau":1,"noi_dung":"AI Awareness","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":2,"noi_dung":"AI Daily Use","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":3,"noi_dung":"AI Self-Assessment","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":4,"noi_dung":"AI Problem Solving","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":5,"noi_dung":"Prompt Engineering","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":6,"noi_dung":"AI x Teamwork","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":7,"noi_dung":"AI Productivity","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":8,"noi_dung":"AI Mindset","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":9,"noi_dung":"AI Limitation","diem_toi_da":10,"diem_cham":0,"ly_do":"string"},
+    {"cau":10,"noi_dung":"AI Growth Plan","diem_toi_da":10,"diem_cham":0,"ly_do":"string"}
+  ],
+  "ai_test_total": 0,
+  "ai_test_label": "AI-Ready",
+  "swat_table": [
+    {"tru_cot":"AI First Mindset","ty_trong":"50%","diem_tho":0,"diem_trong_so":0.0,"co_so":"string"},
+    {"tru_cot":"2AS Execution Capability","ty_trong":"20%","diem_tho":0,"diem_trong_so":0.0,"co_so":"string"},
+    {"tru_cot":"Practical Efficiency & Productivity","ty_trong":"20%","diem_tho":0,"diem_trong_so":0.0,"co_so":"string"},
+    {"tru_cot":"Risk Control & Language","ty_trong":"10%","diem_tho":0,"diem_trong_so":0.0,"co_so":"string"}
+  ],
+  "swat_total": 0.0,
+  "swat_label": "ĐẠT",
+  "strengths": "string",
+  "gaps": "string",
+  "best_at": "string",
+  "conclusion": "string",
+  "next_steps": "string",
+  "decision": "ĐẠT"
+}"""
+
+    from datetime import datetime
+    USER = f"""
+### CV:
+{cv_text[:3000]}
+
+### JD:
+{jd_text[:1500]}
+
+### HƯỚNG DẪN CHẤM AI TEST:
+{ai_scoring[:2500]}
+
+### FRAMEWORK SWAT ELITE:
+{swat_prd[:1500]}
+
+### TIÊU CHÍ 5G:
+{g5_scoring[:800]}
+
+### KẾT QUẢ TEST AI (link):
+{ai_test_text[:2500]}
+
+### KẾT QUẢ TEST 5G (link):
+{g5_test_text[:2500]}
+
+### KẾT QUẢ EQ/IQ (link):
+{eq_test_text[:1500]}
+
+### PHIẾU PHỎNG VẤN:
+{survey_text[:1000]}
+
+Ngày: {datetime.now().strftime("%d/%m/%Y %H:%M")}
+Trả về JSON hợp lệ, điền đủ mọi trường."""
+
+    # ── Gọi OpenAI ───────────────────────────────────────────────────
+    resp = _client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": SYSTEM},
+            {"role": "user",   "content": USER},
+        ],
+        response_format={"type": "json_object"},
+        temperature=0.2,
+        max_tokens=4000,
+    )
+    data = json.loads(resp.choices[0].message.content)
+
+    # ── Lưu vào DocType ──────────────────────────────────────────────
+    doc = frappe.get_doc({
+        "doctype": "AI Candidate Report",
+        # --- text fields ---
+        "candidate_name": data.get("candidate_name", "Unknown"),
+        "position":       data.get("position", ""),
+        "email":          data.get("email", ""),
+        "phone":          data.get("phone", ""),
+        "analysis_date":  datetime.now(),
+        "ai_test_url":    ai_test_url,
+        "g5_test_url":    g5_test_url,
+        "eq_test_url":    eq_test_url,
+        "survey_url":     survey_url,
+        "jd_text":        jd_text[:2000],
+        "ai_test_total":  data.get("ai_test_total", 0),
+        "ai_test_label":  data.get("ai_test_label", ""),
+        "swat_total":     data.get("swat_total", 0),
+        "swat_label":     data.get("swat_label", ""),
+        "strengths":      data.get("strengths", ""),
+        "gaps":           data.get("gaps", ""),
+        "best_at":        data.get("best_at", ""),
+        "conclusion":     data.get("conclusion", ""),
+        "next_steps":     data.get("next_steps", ""),
+        "decision":       data.get("decision", ""),
+        # --- JSON text fields (2 bảng) ---
+        "ai_test_table":  json.dumps(data.get("ai_test_table", []), ensure_ascii=False),
+        "swat_table":     json.dumps(data.get("swat_table",    []), ensure_ascii=False),
+    })
+    doc.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+    return {
+        "doctype_name": doc.name,
+        **data,
+    }
+
+
 # ════════════════════════════════════════════════════════════════════
 # CT Frappe Template — Session & Access Control
 # ════════════════════════════════════════════════════════════════════
