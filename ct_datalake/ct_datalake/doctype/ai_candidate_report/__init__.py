@@ -1,0 +1,1 @@
+# AI Candidate Report DocType
