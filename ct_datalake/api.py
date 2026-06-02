@@ -3,6 +3,7 @@ import os
 import json
 import uuid
 import tempfile
+import hashlib
 from typing import Literal, Optional, List
 from pathlib import Path
 from dotenv import load_dotenv
@@ -34,7 +35,7 @@ from . import ai_matching as _rc
 # ════════════════════════════════════════════════════════════════════
 
 # ── Health check ────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def root():
     """Kiểm tra trạng thái API"""
     return {
@@ -48,6 +49,7 @@ def root():
             "/api/method/ct_datalake.api.semantic_search_llm",
             "/api/method/ct_datalake.api.jd_match",
             "/api/method/ct_datalake.api.jd_match_upload",
+            "/api/method/ct_datalake.api.jd_analyze",
             "/api/method/ct_datalake.api.g600_analyze",
             "/api/method/ct_datalake.api.jd_parse_only",
             "/api/method/ct_datalake.api.draft_document",
@@ -55,7 +57,7 @@ def root():
         ],
     }
 
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def health():
     """Health check chi tiết"""
     return {
@@ -64,13 +66,23 @@ def health():
     }
 
 # ── Semantic Search (FAISS) ─────────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     """
     Tìm kiếm ứng viên BM25:
       mode=in  → Internal (local Redis + Frappe DB)
       mode=out → External (server Redis Stack + synonyms)
     """
+    cache_key = f"semantic_search_{hashlib.md5(f'{query}_{mode}_{top_k}'.encode()).hexdigest()}"
+    
+    use_cache = str(frappe.form_dict.get("use_cache", "1"))
+    if use_cache == "1":
+        cached = frappe.cache().get_value(cache_key)
+        if cached:
+            frappe.response["use_cache"] = 1
+            return cached
+
+    frappe.response["use_cache"] = 0
     try:
         top_k = int(top_k)
         raw = bm25_search(query=query, mode=mode, top_k=top_k)
@@ -86,19 +98,31 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
             "raw": r["data"],
         })
 
-    return {
+    result = {
         "query": query,
         "mode": mode,
         "total": len(results),
         "results": results,
     }
+    frappe.cache().set_value(cache_key, result, expires_in_sec=86400)
+    return result
 
 # ── Semantic Search (LLM Rerank) ────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     """
     BM25 search rồi đưa kết quả vào LLM server-side để phân tích.
     """
+    cache_key = f"semantic_search_llm_{hashlib.md5(f'{query}_{mode}_{top_k}'.encode()).hexdigest()}"
+    
+    use_cache = str(frappe.form_dict.get("use_cache", "1"))
+    if use_cache == "1":
+        cached = frappe.cache().get_value(cache_key)
+        if cached:
+            frappe.response["use_cache"] = 1
+            return cached
+
+    frappe.response["use_cache"] = 0
     if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa được cấu hình")
 
@@ -120,16 +144,18 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     except Exception as e:
         frappe.throw(f"LLM rerank error: {str(e)}")
 
-    return {
+    result = {
         "query": query,
         "mode": mode,
         "total_found": len(raw),
         "candidates_sent_to_llm": top_k,
         "llm_analysis": analysis,
     }
+    frappe.cache().set_value(cache_key, result, expires_in_sec=86400)
+    return result
 
 # ── JD Matching (via form fields) ───────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False):
     """
     Match JD với ứng viên.
@@ -156,7 +182,7 @@ def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False)
     }
 
 # ── JD Matching (File Upload) ───────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def jd_match_upload():
     """
     Upload file JD → extract text → match ứng viên.
@@ -207,11 +233,11 @@ def jd_match_upload():
         "candidates": result.get("candidates", []),
     }
 
-# ── G600 PDF Analysis ────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
-def g600_analyze():
+# ── JD Analysis (All-in-one with Vision + Local Redis) ───────────────
+@frappe.whitelist(allow_guest=True)
+def jd_analyze():
     """
-    Upload PDF tờ trình G600 → GPT-4o Vision đọc và trích xuất lĩnh vực.
+    Upload JD PDF → GPT-4o Vision trích xuất → Search trực tiếp Local Redis → GPT-4o rerank & giải thích.
     """
     if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa được cấu hình")
@@ -223,31 +249,47 @@ def g600_analyze():
     if not file:
         frappe.throw("Vui lòng upload file với key 'file'")
 
-    source = frappe.form_dict.get("source", "both")
+    source = frappe.form_dict.get("source", "in")
     top_k = int(frappe.form_dict.get("top_k", 5))
-    score_threshold = float(frappe.form_dict.get("score_threshold", 0.40))
 
     if not (file.filename or "").lower().endswith(".pdf"):
-        frappe.throw("Chỉ chấp nhận file PDF")
+        frappe.throw("Chỉ chấp nhận file PDF cho tính năng đọc trực tiếp bằng AI Vision")
 
     file_bytes = file.stream.read()
 
-    # Ghi PDF tạm thời
+    import hashlib
+    hash_md5 = hashlib.md5()
+    hash_md5.update(file_bytes)
+    hash_md5.update(source.encode())
+    hash_md5.update(str(top_k).encode())
+    cache_key = f"jd_analyze_{hash_md5.hexdigest()}"
+    
+    use_cache = str(frappe.form_dict.get("use_cache", "1"))
+    if use_cache == "1":
+        cached = frappe.cache().get_value(cache_key)
+        if cached:
+            frappe.response["use_cache"] = 1
+            return cached
+
+    frappe.response["use_cache"] = 0
+    # 1. Ghi PDF tạm thời
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
         tmp.write(file_bytes)
         tmp_path = tmp.name
 
+    # 2. Extract yêu cầu bằng Vision
     try:
-        domains = extract_keywords(tmp_path, get_openai_client())
+        parsed_jd = _rc.extract_jd_requirements(tmp_path, get_openai_client())
     except Exception as e:
         frappe.throw(f"GPT Vision error: {str(e)}")
     finally:
         if os.path.exists(tmp_path):
             os.unlink(tmp_path)
 
-    if not domains:
-        frappe.throw("GPT không trích xuất được lĩnh vực nào từ PDF")
+    if not parsed_jd:
+        frappe.throw("GPT không thể đọc được JD")
 
+    # 3. Kết nối Local Redis
     try:
         redis_client = get_redis_client()
         redis_client.ping()
@@ -255,47 +297,183 @@ def g600_analyze():
         frappe.throw("Không thể kết nối đến Redis Stack")
 
     _rc.TOP_K = top_k
+    
+    keywords = parsed_jd.get("keywords", [])
+    domain = parsed_jd.get("domain", "")
+    summary = parsed_jd.get("summary", "")
+    
+    queries = list(dict.fromkeys(filter(None, [
+        domain,
+        *keywords,
+    ])))
 
-    domain_results = []
-    for domain in domains:
-        all_hits = search_domain(domain, redis_client)
-        # Filter by source
-        if source in ["in", "out"]:
-            hits = [h for h in all_hits if h["mode"] == source]
-        else:
-            hits = all_hits
-        candidates = []
-        for hit in hits:
-            d = hit["data"]
-            mode = hit["mode"]
-            norm = normalize_candidate(d, mode)
-            candidates.append({
-                "source": "🌐 Google Scholar" if mode == "out" else "🏫 Nội bộ",
-                "faiss_score": hit["score"],
-                "candidate": norm,
-                "raw": d,
-            })
+    # 4. Tìm kiếm cục bộ (FAISS/BM25)
+    all_hits = []
+    seen_keys = set()
+    modes = ["in", "out"] if source == "both" else [source]
+    
+    for m in modes:
+        for q in queries:
+            if not q.strip(): continue
+            hits = bm25_search(q, mode=m, top_k=_rc.TOP_K * 4)
+            for h in hits: h["mode"] = m
+            for hit in hits:
+                d = hit["data"]
+                if hit["mode"] == "out":
+                    key = d.get("url") or f"{d.get('name')}|{d.get('affiliation')}"
+                else:
+                    key = f"{d.get('họ và tên', d.get('trường họ và tên'))}|{d.get('trường')}"
+                
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    all_hits.append(hit)
 
-        domain_results.append({
-            "domain_name": domain["name"],
-            "query_vi": domain.get("query_vi", ""),
-            "query_en": domain.get("query_en", ""),
-            "keywords_vi": domain.get("keywords_vi", []),
-            "keywords_en": domain.get("keywords_en", []),
-            "total_candidates": len(candidates),
-            "candidates": candidates,
-        })
+    # Lọc lấy top các ứng viên (gấp 3 lần top_k để LLM chấm)
+    all_hits.sort(key=lambda x: x["score"], reverse=True)
+    raw_candidates = all_hits[: top_k * 3]
 
-    return {
-        "source": source,
-        "top_k_per_domain": top_k,
-        "score_threshold": score_threshold,
-        "total_domains": len(domain_results),
-        "domains": domain_results,
-    }
+    if not raw_candidates:
+        return []
+
+    # 5. Dùng LLM Rerank và Giải thích chuyên môn
+    jd_summary_text = f"Summary: {summary}\nDomain: {domain}\nSkills: {', '.join(parsed_jd.get('required_skills', []))}"
+    
+    from .jd_match import _rerank_candidates
+    
+    ranked_candidates = _rerank_candidates(
+        jd_text=jd_summary_text,
+        parsed_jd=parsed_jd,
+        candidates=raw_candidates,
+        mode="in" if source == "both" else source,
+        top_k=top_k
+    )
+
+    frappe.cache().set_value(cache_key, ranked_candidates, expires_in_sec=86400)
+    return ranked_candidates
+
+# ── G600 PDF Analysis ────────────────────────────────────────────────
+# ── G600 PDF Analysis ────────────────────────────────────────────────
+@frappe.whitelist(allow_guest=True)
+def g600_analyze():
+    """
+    Upload JD PDF → GPT-4o Vision trích xuất → Search trực tiếp Local Redis → GPT-4o rerank & giải thích.
+    """
+    if not get_openai_client():
+        frappe.throw("OPENAI_API_KEY chưa được cấu hình")
+
+    if not frappe.request.files:
+        frappe.throw("Chưa có file nào được upload")
+
+    file = frappe.request.files.get("file")
+    if not file:
+        frappe.throw("Vui lòng upload file với key 'file'")
+
+    source = frappe.form_dict.get("source", "in")
+    top_k = int(frappe.form_dict.get("top_k", 5))
+
+    if not (file.filename or "").lower().endswith(".pdf"):
+        frappe.throw("Chỉ chấp nhận file PDF cho tính năng đọc trực tiếp bằng AI Vision")
+
+    file_bytes = file.stream.read()
+
+    import hashlib
+    hash_md5 = hashlib.md5()
+    hash_md5.update(file_bytes)
+    hash_md5.update(source.encode())
+    hash_md5.update(str(top_k).encode())
+    cache_key = f"g600_analyze_{hash_md5.hexdigest()}"
+    
+    use_cache = str(frappe.form_dict.get("use_cache", "1"))
+    if use_cache == "1":
+        cached = frappe.cache().get_value(cache_key)
+        if cached:
+            frappe.response["use_cache"] = 1
+            return cached
+
+    frappe.response["use_cache"] = 0
+    # 1. Ghi PDF tạm thời
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp:
+        tmp.write(file_bytes)
+        tmp_path = tmp.name
+
+    # 2. Extract yêu cầu bằng Vision
+    try:
+        parsed_jd = _rc.extract_jd_requirements(tmp_path, get_openai_client())
+    except Exception as e:
+        frappe.throw(f"GPT Vision error: {str(e)}")
+    finally:
+        if os.path.exists(tmp_path):
+            os.unlink(tmp_path)
+
+    if not parsed_jd:
+        frappe.throw("GPT không thể đọc được JD")
+
+    # 3. Kết nối Local Redis
+    try:
+        redis_client = get_redis_client()
+        redis_client.ping()
+    except Exception:
+        frappe.throw("Không thể kết nối đến Redis Stack")
+
+    _rc.TOP_K = top_k
+    
+    keywords = parsed_jd.get("keywords", [])
+    domain = parsed_jd.get("domain", "")
+    summary = parsed_jd.get("summary", "")
+    
+    queries = list(dict.fromkeys(filter(None, [
+        domain,
+        *keywords,
+    ])))
+
+    # 4. Tìm kiếm cục bộ (FAISS/BM25)
+    all_hits = []
+    seen_keys = set()
+    modes = ["in", "out"] if source == "both" else [source]
+    
+    for m in modes:
+        for q in queries:
+            if not q.strip(): continue
+            hits = bm25_search(q, mode=m, top_k=_rc.TOP_K * 4)
+            for h in hits: h["mode"] = m
+            for hit in hits:
+                d = hit["data"]
+                if hit["mode"] == "out":
+                    key = d.get("url") or f"{d.get('name')}|{d.get('affiliation')}"
+                else:
+                    key = f"{d.get('họ và tên', d.get('trường họ và tên'))}|{d.get('trường')}"
+                
+                if key not in seen_keys:
+                    seen_keys.add(key)
+                    all_hits.append(hit)
+
+    # Lọc lấy top các ứng viên (gấp 3 lần top_k để LLM chấm)
+    all_hits.sort(key=lambda x: x["score"], reverse=True)
+    raw_candidates = all_hits[: top_k * 3]
+
+    if not raw_candidates:
+        return []
+
+    # 5. Dùng LLM Rerank và Giải thích chuyên môn
+    jd_summary_text = f"Summary: {summary}\nDomain: {domain}\nSkills: {', '.join(parsed_jd.get('required_skills', []))}"
+    
+    from .jd_match import _rerank_candidates
+    
+    ranked_candidates = _rerank_candidates(
+        jd_text=jd_summary_text,
+        parsed_jd=parsed_jd,
+        candidates=raw_candidates,
+        mode="in" if source == "both" else source,
+        top_k=top_k
+    )
+
+    frappe.cache().set_value(cache_key, ranked_candidates, expires_in_sec=86400)
+    return ranked_candidates
+
+
 
 # ── Parse JD only ────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def jd_parse_only(query: str):
     """
     Gửi JD text → GPT phân tích.
@@ -308,7 +486,7 @@ def jd_parse_only(query: str):
         frappe.throw(str(e))
     return {"parsed_jd": parsed}
 # ── Draft Document ────────────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def draft_document(
     candidate_info: str,
     doc_type: str = "invite_collab",
@@ -405,7 +583,7 @@ def _resolve_session(session_id: str) -> str:
         return ""
 
 
-@frappe.whitelist(allow_guest=False)
+@frappe.whitelist(allow_guest=True)
 def get_context():
     """
     Entry point cho Frontend (initSession).

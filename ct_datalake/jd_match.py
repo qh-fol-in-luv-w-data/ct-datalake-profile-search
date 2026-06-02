@@ -414,6 +414,7 @@ def _rerank_candidates(
 Bạn là chuyên gia tuyển dụng cấp cao.
 
 Đánh giá mức độ phù hợp của từng ứng viên với Job Description.
+LƯU Ý QUAN TRỌNG: Tất cả các nội dung phân tích (strengths, gaps, reason) BẮT BUỘC phải viết hoàn toàn bằng Tiếng Việt.
 
 Thang điểm:
 90-100 = excellent
@@ -429,9 +430,9 @@ Trả về JSON:
       "index": 0,
       "match_score": 95,
       "verdict": "excellent",
-      "strengths": [],
-      "gaps": [],
-      "reason": ""
+      "strengths": ["Điểm mạnh 1 bằng tiếng Việt", "Điểm mạnh 2"],
+      "gaps": ["Thiếu sót 1 bằng tiếng Việt", "Thiếu sót 2"],
+      "reason": "Giải thích chi tiết bằng Tiếng Việt vì sao chọn điểm này"
     }
   ]
 }
@@ -501,6 +502,120 @@ Trả về JSON:
     return output
 
 
+
+def _rerank_g600_candidates(
+    g600_domain: str,
+    keywords: list,
+    candidates: list[dict],
+    top_k: int = 5,
+) -> list[dict]:
+
+    if not candidates:
+        return []
+
+    slim = []
+    for i, c in enumerate(candidates):
+        d = c["data"]
+        cand_mode = c.get("mode", "in")
+        norm = normalize_candidate(d, cand_mode)
+        slim.append({
+            "index": i,
+            "name": norm["name"],
+            "school": norm["school"],
+            "title": norm["title"],
+            "academic_rank": norm["academic_rank"],
+            "degree": norm["degree"],
+            "position": norm["position"],
+            "expertise": str(norm["expertise"])[:1200],
+            "affiliation": norm["affiliation"],
+            "email": norm["email"],
+            "interests": norm["interests"],
+            "citations": norm["citations"],
+            "h_index": norm["h_index"],
+            "url": norm["url"],
+            "university_name": norm["university_name"],
+            "city": norm["city"],
+        })
+
+    system_prompt = '''
+Bạn là một chuyên gia đánh giá và tìm kiếm nhân tài / chuyên gia khoa học cấp cao.
+
+Hãy đánh giá mức độ phù hợp chuyên môn của từng chuyên gia/ứng viên đối với Lĩnh vực nghiên cứu/dự án được đề cập trong Tờ trình G600.
+
+LƯU Ý ĐẶC BIỆT QUAN TRỌNG:
+1. Chuyên môn của chuyên gia chủ yếu nằm ở mảng "interests" (các hướng nghiên cứu). BẠN BẮT BUỘC phải đọc mảng "interests" này để đối chiếu. Tuyệt đối KHÔNG ĐƯỢC kết luận là "không có thông tin" nếu mảng "interests" hoặc "expertise" có dữ liệu.
+2. Phải đánh giá ngữ nghĩa rộng: VD Tờ trình cần "Công nghệ thông tin" thì các chuyên gia có interests "Trí tuệ nhân tạo", "Học máy", "Xử lý ngôn ngữ tự nhiên" ĐỀU LÀ KHỚP và phải được điểm cao. Không được bắt bẻ câu chữ cứng nhắc.
+3. BẮT BUỘC phải đánh giá và trả về kết quả cho TẤT CẢ các chuyên gia trong danh sách đầu vào vào mảng `ranked`, tuyệt đối không được bỏ sót bất kỳ ai, kể cả khi điểm của họ là 0.
+
+Thang điểm chuyên môn (0-100):
+90-100 = Rất xuất sắc (Khớp hoàn toàn chuyên môn sâu)
+70-89 = Tốt (Có nghiên cứu/kinh nghiệm liên quan)
+50-69 = Khá (Có kỹ năng/quan tâm nhưng chưa sâu)
+0-49 = Kém (Không phù hợp)
+
+Trả về JSON:
+{
+  "ranked": [
+    {
+      "index": 0,
+      "match_score": 95,
+      "verdict": "excellent",
+      "strengths": ["Các điểm chuyên môn/nghiên cứu của chuyên gia KHỚP với yêu cầu của Tờ trình G600"],
+      "gaps": ["Những chuyên môn/yêu cầu mà Tờ trình G600 CẦN nhưng chuyên gia này đang THIẾU"],
+      "reason": "Giải thích ngắn gọn lý do tại sao chấm điểm này dựa trên việc đối chiếu chuyên gia với Tờ trình G600"
+    }
+  ]
+}
+'''
+
+    if not get_openai_client():
+        return candidates[:top_k]
+
+    user_content = (
+        f"=== YÊU CẦU TỪ TỜ TRÌNH G600 ===\nLĩnh vực: {g600_domain}\nTừ khoá: {', '.join(keywords)}\n\n"
+        f"=== DANH SÁCH CHUYÊN GIA ===\n"
+        f"{json.dumps(slim, ensure_ascii=False, indent=2)}"
+    )
+
+    response = get_openai_client().chat.completions.create(
+        model=OPENAI_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_content}
+        ],
+        temperature=0.2,
+        response_format={"type": "json_object"},
+    )
+
+    raw = response.choices[0].message.content or "{}"
+    try:
+        result = json.loads(raw)
+    except json.JSONDecodeError:
+        return candidates[:top_k]
+
+    output = []
+    ranked = sorted(
+        result.get("ranked", []),
+        key=lambda x: x.get("match_score", 0),
+        reverse=True
+    )
+
+    for rm in ranked:
+        idx = rm.get("index")
+        if idx is None or idx >= len(candidates):
+            continue
+        output.append({
+            **candidates[idx],
+            "match_score": rm.get("match_score", 0),
+            "verdict": rm.get("verdict", ""),
+            "strengths": rm.get("strengths", []),
+            "gaps": rm.get("gaps", []),
+            "reason": rm.get("reason", ""),
+        })
+        if len(output) >= top_k:
+            break
+
+    return output
 # ========================
 # PUBLIC API
 # ========================

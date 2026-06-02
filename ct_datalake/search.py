@@ -1,3 +1,5 @@
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import frappe
 import os
 import redis
@@ -50,7 +52,7 @@ def _search_external(query: str, top_k: int) -> list:
             get_external_fts_url(),
             headers={"X-API-Key": get_external_api_key()},
             params={"q": query, "limit": top_k},
-            timeout=10,
+            timeout=10, verify=False,
         )
         resp.raise_for_status()
         data  = resp.json()
@@ -90,7 +92,7 @@ def _search_internal(query: str, top_k: int) -> list:
             get_internal_api_url(),
             headers={"X-API-Key": get_external_api_key()},
             params={"q": query, "limit": top_k},
-            timeout=10,
+            timeout=10, verify=False,
         )
         resp.raise_for_status()
         items = resp.json()
@@ -106,16 +108,16 @@ def _search_internal(query: str, top_k: int) -> list:
             "score": item.get("score", 0.0),
             "data": {
                 "id":               item.get("id", ""),
-                "m├ú sß╗æ":            item.get("code", ""),
-                "hß╗ì v├á t├¬n":        item.get("name", ""),
-                "chuy├¬n ng├ánh":     item.get("specialization", ""),
-                "khoa/ph├▓ng ban":   item.get("department", ""),
-                "hß╗ìc h├ám":          item.get("academic_rank", ""),
-                "hß╗ìc vß╗ï":           item.get("degree", ""),
+                "mã số":            item.get("code", ""),
+                "họ và tên":        item.get("name", ""),
+                "chuyên ngành":     item.get("specialization", ""),
+                "khoa/phòng ban":   item.get("department", ""),
+                "học hàm":          item.get("academic_rank", ""),
+                "học vị":           item.get("degree", ""),
                 "email":            item.get("email", ""),
-                "─æiß╗çn thoß║íi":       item.get("phone", ""),
-                "trß║íng th├íi":       item.get("active_status", ""),
-                "mß╗⌐c hß╗úp t├íc":      item.get("cooperation_level", ""),
+                "điện thoại":       item.get("phone", ""),
+                "trạng thái":       item.get("active_status", ""),
+                "mức hợp tác":      item.get("cooperation_level", ""),
             },
         })
     return results
@@ -131,7 +133,7 @@ def search(query: str, mode: str = "in", top_k: int = 5) -> list:
         out ΓåÆ External professors (server Redis Stack + synonyms)
     """
     if mode not in ("in", "out"):
-        raise ValueError("mode phß║úi l├á 'in' hoß║╖c 'out'")
+        raise ValueError("mode phải là 'in' hoặc 'out'")
 
     if mode == "out":
         return _search_external(query, top_k)
