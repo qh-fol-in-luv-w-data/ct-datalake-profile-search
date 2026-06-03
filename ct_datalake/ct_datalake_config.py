@@ -57,7 +57,8 @@ def get_external_api_key() -> str:
                 return key
         except Exception:
             pass
-    return os.getenv("EXTERNAL_API_KEY", "")
+    # Fallback API key nếu chưa config trong hệ thống
+    return os.getenv("EXTERNAL_API_KEY", "c92af52f9ef72072b0011c9fa685ee4cb9d1e88daad85c75")
 
 
 def get_external_api_url() -> str:

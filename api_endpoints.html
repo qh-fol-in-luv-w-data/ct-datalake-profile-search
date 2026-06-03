@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CT DataLake API Endpoints</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-2 text-indigo-600">CT DataLake API Endpoints</h1>
+        <p class="mb-8 text-slate-600">Danh sách các câu lệnh cURL cho toàn bộ 11 endpoints. Bấm nút Copy để sao chép
+            nhanh.</p>
+
+        <div class="space-y-8" id="api-list">
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">1. ct_datalake.api.root (GET)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Kiểm tra trạng thái chung của API.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-0', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-0" class="language-bash">curl -X GET "https://devapp.ctpai.vn/api/method/ct_datalake.api.root" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d"</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">2. ct_datalake.api.health (GET)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Kiểm tra trạng thái health check chi tiết.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-1', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-1" class="language-bash">curl -X GET "https://devapp.ctpai.vn/api/method/ct_datalake.api.health" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d"</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">3. ct_datalake.api.semantic_search (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Tìm kiếm ứng viên bằng cơ chế BM25 + FAISS.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-2', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-2" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.semantic_search" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Kỹ sư AI có kinh nghiệm LLM",
+    "mode": "in",
+    "top_k": 5,
+    "use_cache": "1"
+  }'</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">4. ct_datalake.api.semantic_search_llm (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Tìm kiếm BM25, sau đó đưa kết quả vào LLM phân tích thêm.
+                        </p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-3', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-3" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.semantic_search_llm" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Kỹ sư AI có kinh nghiệm LLM",
+    "mode": "in",
+    "top_k": 5,
+    "use_cache": "1"
+  }'</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">5. ct_datalake.api.jd_match (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">So khớp giữa một đoạn text (JD) với hồ sơ ứng viên.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-4', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-4" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.jd_match" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jd_text": "Tìm kiếm ứng viên có 3 năm kinh nghiệm Python...",
+    "mode": "in",
+    "top_k": 5,
+    "fast": false
+  }'</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">6. ct_datalake.api.jd_match_upload (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Upload file JD dạng văn bản để AI tìm kiếm ứng viên tương
+                            ứng.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-5', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-5" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.jd_match_upload" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -F "file=@/path/to/your/jd.pdf" \
+  -F "mode=in" \
+  -F "top_k=5" \
+  -F "fast=false"</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">7. ct_datalake.api.jd_analyze (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Đọc JD (file PDF) bằng Vision AI, tự động tách từ khóa,
+                            search trực tiếp vào Local Redis rồi dùng GPT rerank lại kết quả.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-6', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-6" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.jd_analyze" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -F "file=@/path/to/your/jd_file.pdf" \
+  -F "source=in" \
+  -F "top_k=5" \
+  -F "use_cache=1"</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">8. ct_datalake.api.g600_analyze (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Dành riêng cho các tờ trình G600 (file PDF). Trích xuất
+                            lĩnh vực và search.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-7', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-7" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.g600_analyze" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -F "file=@/path/to/your/g600_document.pdf" \
+  -F "source=in" \
+  -F "top_k=5" \
+  -F "use_cache=1"</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">9. ct_datalake.api.jd_parse_only (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Bóc tách các trường thông tin từ Text JD qua GPT.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-8', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-8" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.jd_parse_only" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Yêu cầu kỹ sư phần mềm biết Python, SQL, và 3 năm kinh nghiệm..."
+  }'</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">10. ct_datalake.api.draft_document (POST)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Tự động dùng AI để soạn thảo các loại văn bản (thư mời,
+                            đề nghị tư vấn...)</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-9', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-9" class="language-bash">curl -X POST "https://devapp.ctpai.vn/api/method/ct_datalake.api.draft_document" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "candidate_info": "{\"name\": \"Nguyen Van A\", \"expertise\": \"AI/ML\"}",
+    "doc_type": "invite_collab",
+    "org_name": "CT Group",
+    "sender_name": "Nguyen Van B",
+    "extra_note": "Gửi trước ngày 15/10"
+  }'</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">11. ct_datalake.api.get_context (GET)</h2>
+                        <p class="text-sm text-slate-500 mt-1">Dùng cho Frontend lấy thông tin Session & CSRF Token.</p>
+                    </div>
+                    <button onclick="copyToClipboard('cmd-10', this)"
+                        class="px-4 py-2 bg-indigo-50 text-indigo-600 hover:bg-indigo-100 rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        Copy cURL
+                    </button>
+                </div>
+                <div class="bg-[#2d2d2d] relative group">
+                    <pre class="m-0 p-6 text-sm overflow-x-auto"><code id="cmd-10" class="language-bash">curl -X GET "https://devapp.ctpai.vn/api/method/ct_datalake.api.get_context" \
+  -H "Authorization: token 539cc7c60b48834:451f510c38b665d"</code></pre>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <script>
+        function copyToClipboard(elementId, btnElement) {
+            const el = document.getElementById(elementId);
+            const text = el.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = btnElement.innerText;
+                btnElement.innerText = 'Copied!';
+                btnElement.classList.add('bg-green-50', 'text-green-600');
+                btnElement.classList.remove('bg-indigo-50', 'text-indigo-600');
+
+                setTimeout(() => {
+                    btnElement.innerText = originalText;
+                    btnElement.classList.remove('bg-green-50', 'text-green-600');
+                    btnElement.classList.add('bg-indigo-50', 'text-indigo-600');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+
+</html>

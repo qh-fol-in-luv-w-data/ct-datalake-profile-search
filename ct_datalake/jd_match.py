@@ -67,6 +67,7 @@ IN_FIELDS = {
     "expertise": [
         "sản phẩm thực hiện",
         "chuyên môn",
+        "chuyên ngành",
         "lĩnh vực",
         "expertise",
         "specialization",
