@@ -35,7 +35,7 @@ from . import ai_matching as _rc
 # ════════════════════════════════════════════════════════════════════
 
 # ── Health check ────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def root():
     """Kiểm tra trạng thái API"""
     return {
@@ -57,7 +57,7 @@ def root():
         ],
     }
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def health():
     """Health check chi tiết"""
     return {
@@ -66,7 +66,7 @@ def health():
     }
 
 # ── Semantic Search (FAISS) ─────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     """
     Tìm kiếm ứng viên BM25:
@@ -108,7 +108,7 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
     return result
 
 # ── Semantic Search (LLM Rerank) ────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     """
     BM25 search rồi đưa kết quả vào LLM server-side để phân tích.
@@ -155,7 +155,7 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     return result
 
 # ── JD Matching (via form fields) ───────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False):
     """
     Match JD với ứng viên.
@@ -182,7 +182,7 @@ def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False)
     }
 
 # ── JD Matching (File Upload) ───────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_match_upload():
     """
     Upload file JD → extract text → match ứng viên.
@@ -234,7 +234,7 @@ def jd_match_upload():
     }
 
 # ── JD Analysis (All-in-one with Vision + Local Redis) ───────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_analyze():
     """
     Upload JD PDF → GPT-4o Vision trích xuất → Search trực tiếp Local Redis → GPT-4o rerank & giải thích.
@@ -353,7 +353,7 @@ def jd_analyze():
 
 # ── G600 PDF Analysis ────────────────────────────────────────────────
 # ── G600 PDF Analysis ────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def g600_analyze():
     """
     Upload JD PDF → GPT-4o Vision trích xuất → Search trực tiếp Local Redis → GPT-4o rerank & giải thích.
@@ -473,7 +473,7 @@ def g600_analyze():
 
 
 # ── Parse JD only ────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def jd_parse_only(query: str):
     """
     Gửi JD text → GPT phân tích.
@@ -486,7 +486,7 @@ def jd_parse_only(query: str):
         frappe.throw(str(e))
     return {"parsed_jd": parsed}
 # ── Draft Document ────────────────────────────────────────────────────────────
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def draft_document(
     candidate_info: str,
     doc_type: str = "invite_collab",
@@ -583,7 +583,7 @@ def _resolve_session(session_id: str) -> str:
         return ""
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=False)
 def get_context():
     """
     Entry point cho Frontend (initSession).
