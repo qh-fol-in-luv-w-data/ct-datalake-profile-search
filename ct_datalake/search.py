@@ -50,7 +50,10 @@ def _search_external(query: str, top_k: int) -> list:
     try:
         resp = requests.get(
             get_external_fts_url(),
-            headers={"X-API-Key": get_external_api_key()},
+            headers={
+                "X-API-Key": get_external_api_key(),
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
             params={"q": query, "limit": top_k},
             timeout=10, verify=False,
         )
@@ -90,7 +93,10 @@ def _search_internal(query: str, top_k: int) -> list:
     try:
         resp = requests.get(
             get_internal_api_url(),
-            headers={"X-API-Key": get_external_api_key()},
+            headers={
+                "X-API-Key": get_external_api_key(),
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            },
             params={"q": query, "limit": top_k},
             timeout=10, verify=False,
         )
@@ -99,8 +105,9 @@ def _search_internal(query: str, top_k: int) -> list:
         if isinstance(items, dict):
             items = items.get("results", items.get("data", []))
     except Exception as e:
-        frappe.log_error(title="[search] Internal API error", message=str(e))
-        frappe.throw(f"Lỗi khi gọi API tìm kiếm nội bộ: {str(e)}")
+        url_called = get_internal_api_url()
+        frappe.log_error(title="[search] Internal API error", message=f"URL: {url_called}\nError: {str(e)}")
+        frappe.throw(f"Lỗi khi gọi API tìm kiếm nội bộ ({url_called}): {str(e)}")
 
     results = []
     for item in items:
