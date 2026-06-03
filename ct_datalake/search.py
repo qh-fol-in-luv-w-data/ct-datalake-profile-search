@@ -59,8 +59,8 @@ def _search_external(query: str, top_k: int) -> list:
         # Server trß║ú vß╗ü {"total": N, "results": [...]} hoß║╖c list trß╗▒c tiß║┐p
         items = data.get("results", data) if isinstance(data, dict) else data
     except Exception as e:
-        frappe.logger().warning(f"[search] External FTS error: {e}")
-        return []
+        frappe.log_error(title="[search] External FTS error", message=str(e))
+        frappe.throw(f"Lỗi khi gọi API tìm kiếm bên ngoài: {str(e)}")
 
     return [
         {
@@ -99,8 +99,8 @@ def _search_internal(query: str, top_k: int) -> list:
         if isinstance(items, dict):
             items = items.get("results", items.get("data", []))
     except Exception as e:
-        frappe.logger().warning(f"[search] Internal API error: {e}")
-        return []
+        frappe.log_error(title="[search] Internal API error", message=str(e))
+        frappe.throw(f"Lỗi khi gọi API tìm kiếm nội bộ: {str(e)}")
 
     results = []
     for item in items:
