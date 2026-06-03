@@ -64,18 +64,18 @@ def get_external_api_url() -> str:
     s = _get_settings()
     if s and s.external_api_url:
         return s.external_api_url
-    return os.getenv("EXTERNAL_API_URL", "http://103.186.101.219/api/professors")
+    return os.getenv("EXTERNAL_API_URL", "https://api.ctpai.vn/api/professors")
 
 
 def get_external_fts_url() -> str:
     s = _get_settings()
     if s and s.external_fts_url:
         return s.external_fts_url
-    return os.getenv("EXTERNAL_FTS_URL", "http://103.186.101.219/api/search/professors")
+    return os.getenv("EXTERNAL_FTS_URL", "https://api.ctpai.vn/api/search/professors")
 
 
 def get_internal_api_url() -> str:
     s = _get_settings()
     if s and s.internal_api_url:
         return s.internal_api_url
-    return os.getenv("INTERNAL_FTS_URL", "http://103.186.101.219/api/search/experts")
+    return os.getenv("INTERNAL_FTS_URL", "https://api.ctpai.vn/api/search/experts")
