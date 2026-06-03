@@ -58,21 +58,21 @@
             "description": "API key để gọi server search bên ngoài"
         },
         {
-            "default": "http://103.186.101.219/api/professors",
+            "default": "https://api.ctpai.vn/api/professors",
             "fieldname": "external_api_url",
             "fieldtype": "Data",
             "label": "External API URL",
             "description": "URL lấy danh sách professors"
         },
         {
-            "default": "http://103.186.101.219/api/search/professors",
+            "default": "https://api.ctpai.vn/api/search/professors",
             "fieldname": "external_fts_url",
             "fieldtype": "Data",
             "label": "External FTS URL",
             "description": "URL full-text search professors"
         },
         {
-            "default": "http://103.186.101.219/api/search/experts",
+            "default": "https://api.ctpai.vn/api/search/experts",
             "fieldname": "internal_api_url",
             "fieldtype": "Data",
             "label": "Internal API URL",
