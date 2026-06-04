@@ -97,19 +97,25 @@ Nhiệm vụ:
 5. Nếu ứng viên chưa phù hợp, nêu rõ lý do.
 6. Sắp xếp từ phù hợp nhất xuống thấp hơn.
 7. Trả lời bằng tiếng Việt.
-8. Format rõ ràng, dễ đọc.
+8. Trả về đúng MỘT CẤU TRÚC JSON MẢNG (Array of JSON objects). Không được kèm theo bất kỳ văn bản nào khác.
 
-Format mẫu:
+Format JSON mẫu bắt buộc:
+[
+  {{
+    "candidate_name": "Tên ứng viên",
+    "match_score": 92,
+    "overview": "Đánh giá tổng quan...",
+    "strengths": "Điểm mạnh...",
+    "deep_dive": "Điểm cần khai thác sâu...",
+    "interview_questions": [
+      "Câu hỏi 1",
+      "Câu hỏi 2"
+    ],
+    "risks": "Rủi ro / thiếu sót..."
+  }}
+]
 
-# 1. Tên ứng viên
-- Match Score: 92/100
-- Đánh giá tổng quan:
-- Điểm mạnh:
-- Điểm cần khai thác sâu:
-- Câu hỏi phỏng vấn gợi ý:
-- Rủi ro / thiếu sót:
-
-Trả lời:
+Trả lời (chỉ JSON):
 """
 
 
@@ -145,7 +151,7 @@ def rerank(
     print("🚀 Calling OpenAI...")
 
     if not get_openai_client():
-        return "⚠️ Chưa cấu hình OPENAI_API_KEY. Vui lòng thiết lập biến môi trường."
+        return [{"error": "⚠️ Chưa cấu hình OPENAI_API_KEY. Vui lòng thiết lập biến môi trường."}]
 
     prompt = build_prompt(
         query,
@@ -162,7 +168,7 @@ def rerank(
                     "role": "system",
                     "content": (
                         "Bạn là chuyên gia tuyển dụng, "
-                        "headhunter và cố vấn phỏng vấn cấp cao."
+                        "headhunter và cố vấn phỏng vấn cấp cao. Luôn trả về kết quả dưới dạng JSON hợp lệ."
                     )
                 },
                 {
@@ -171,9 +177,10 @@ def rerank(
                 }
             ],
             temperature=0.2,
+            response_format={"type": "json_object"}
         )
 
-        result = (
+        result_str = (
             response
             .choices[0]
             .message
@@ -181,8 +188,27 @@ def rerank(
             .strip()
         )
 
-        if not result:
-            result = "⚠️ OpenAI không trả kết quả"
+        if not result_str:
+            result = [{"error": "⚠️ OpenAI không trả kết quả"}]
+        else:
+            try:
+                # Bắt OpenAI trả JSON object nên ta có thể cần bọc nó vào 1 key
+                # Nhưng prompt yêu cầu trả JSON array. Để đảm bảo an toàn với response_format={"type": "json_object"},
+                # ta nên parse tuỳ biến.
+                import re
+                # Lọc lấy array từ chuỗi trả về
+                match = re.search(r'\[.*\]', result_str, re.DOTALL)
+                if match:
+                    result = json.loads(match.group(0))
+                else:
+                    result = json.loads(result_str)
+                    
+                if isinstance(result, dict) and "candidates" in result:
+                    result = result["candidates"]
+                elif isinstance(result, dict):
+                    result = [result] # Fallback
+            except json.JSONDecodeError:
+                result = [{"error": "Lỗi parse JSON", "raw_content": result_str}]
 
         # ========================
         # SAVE CACHE
@@ -195,4 +221,4 @@ def rerank(
 
     except Exception as e:
 
-        return f"❌ Lỗi OpenAI API: {str(e)}"
+        return [{"error": f"❌ Lỗi OpenAI API: {str(e)}"}]

@@ -126,7 +126,23 @@ const handleSearch = async () => {
 
     <div v-if="llmAnalysis" class="analysis-results glass-card fade-in">
       <h3><Brain :size="20" /> LLM Analysis</h3>
-      <div class="markdown-content">{{ llmAnalysis }}</div>
+      <div class="markdown-content" v-if="typeof llmAnalysis === 'string'">{{ llmAnalysis }}</div>
+      <div v-else-if="Array.isArray(llmAnalysis)" class="llm-cards">
+        <div v-for="(item, idx) in llmAnalysis" :key="idx" class="llm-card" style="margin-bottom: 1.5rem; border-bottom: 1px solid #444; padding-bottom: 1rem;">
+          <h4 style="margin-top: 0; color: var(--accent-color);">{{ idx + 1 }}. {{ item.candidate_name || item.candidate }} <span v-if="item.match_score" style="color: #ffaa44;">- Điểm: {{ item.match_score }}/100</span></h4>
+          <p v-if="item.overview"><strong>Tổng quan:</strong> {{ item.overview }}</p>
+          <p v-if="item.strengths"><strong>Điểm mạnh:</strong> {{ item.strengths }}</p>
+          <p v-if="item.deep_dive"><strong>Cần khai thác:</strong> {{ item.deep_dive }}</p>
+          <p v-if="item.risks"><strong>Rủi ro:</strong> {{ item.risks }}</p>
+          <div v-if="item.interview_questions && item.interview_questions.length">
+            <strong>Câu hỏi gợi ý:</strong>
+            <ul style="margin-top: 0.5rem; margin-bottom: 0;">
+              <li v-for="(q, qIdx) in item.interview_questions" :key="qIdx">{{ q }}</li>
+            </ul>
+          </div>
+          <p v-if="item.error" style="color: red;">{{ item.error }}</p>
+        </div>
+      </div>
     </div>
 
     <div v-if="results.length" class="results-list">
