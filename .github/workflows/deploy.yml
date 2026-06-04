@@ -1,0 +1,34 @@
+name: Deploy Frappe Apps
+
+on:
+  push:
+    branches:
+      - uat
+      - master
+
+jobs:
+  deploy-uat:
+    if: github.ref == 'refs/heads/uat'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to UAT Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${ secrets.UAT_SERVER_IP }
+          username: frappe
+          password: ${ secrets.UAT_SERVER_PASSWORD }
+          script: |
+            /home/frappe/deploy.sh 2as-master-profile uat uatapp.ctpai.vn
+
+  deploy-prod:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to PROD Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${ secrets.PROD_SERVER_IP }
+          username: frappe
+          password: ${ secrets.PROD_SERVER_PASSWORD }
+          script: |
+            /home/frappe/deploy.sh 2as-master-profile master app.ctpai.vn
