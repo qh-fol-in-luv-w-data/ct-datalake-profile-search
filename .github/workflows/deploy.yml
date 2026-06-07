@@ -14,11 +14,11 @@ jobs:
       - name: Deploy to UAT Server
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${ secrets.UAT_SERVER_IP }
+          host: ${{ secrets.UAT_SERVER_IP }}
           username: frappe
-          password: ${ secrets.UAT_SERVER_PASSWORD }
+          password: ${{ secrets.UAT_SERVER_PASSWORD }}
           script: |
-            /home/frappe/deploy.sh 2as-master-profile uat uatapp.ctpai.vn
+            /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
 
   deploy-prod:
     if: github.ref == 'refs/heads/master'
@@ -27,8 +27,8 @@ jobs:
       - name: Deploy to PROD Server
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: ${ secrets.PROD_SERVER_IP }
+          host: ${{ secrets.PROD_SERVER_IP }}
           username: frappe
-          password: ${ secrets.PROD_SERVER_PASSWORD }
+          password: ${{ secrets.PROD_SERVER_PASSWORD }}
           script: |
-            /home/frappe/deploy.sh 2as-master-profile master app.ctpai.vn
+            /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
