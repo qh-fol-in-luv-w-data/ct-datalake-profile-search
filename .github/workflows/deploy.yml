@@ -15,10 +15,10 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.UAT_SERVER_IP }}
-          username: frappe
+          username: root
           password: ${{ secrets.UAT_SERVER_PASSWORD }}
           script: |
-            /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
+            su - frappe -c "/home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn"
 
   deploy-prod:
     if: github.ref == 'refs/heads/master'
@@ -28,7 +28,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.PROD_SERVER_IP }}
-          username: frappe
+          username: root
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           script: |
-            /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
+            su - frappe -c "/home/frappe/deploy.sh ct_datalake master app.ctpai.vn"
