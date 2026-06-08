@@ -18,7 +18,21 @@ jobs:
           username: root
           password: ${{ secrets.UAT_SERVER_PASSWORD }}
           script: |
-            su - frappe -c "cd /home/frappe/frappe-bench/apps/ct_datalake && git clean -fd && /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn"
+            su - frappe -c '
+              cd /home/frappe/frappe-bench/apps/ct_datalake
+              git clean -fd
+              /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
+              FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
+              if [ -d "$FRONTEND_DIR" ]; then
+                  echo "📦 Phát hiện thư mục frontend độc lập, đang build..."
+                  cd "$FRONTEND_DIR"
+                  npm install
+                  npm run build
+                  cd /home/frappe/frappe-bench
+                  bench build --app ct_datalake
+                  bench clear-cache
+              fi
+            '
 
   deploy-prod:
     if: github.ref == 'refs/heads/master'
@@ -31,4 +45,18 @@ jobs:
           username: root
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           script: |
-            su - frappe -c "cd /home/frappe/frappe-bench/apps/ct_datalake && git clean -fd && /home/frappe/deploy.sh ct_datalake master app.ctpai.vn"
+            su - frappe -c '
+              cd /home/frappe/frappe-bench/apps/ct_datalake
+              git clean -fd
+              /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
+              FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
+              if [ -d "$FRONTEND_DIR" ]; then
+                  echo "📦 Phát hiện thư mục frontend độc lập, đang build..."
+                  cd "$FRONTEND_DIR"
+                  npm install
+                  npm run build
+                  cd /home/frappe/frappe-bench
+                  bench build --app ct_datalake
+                  bench clear-cache
+              fi
+            '
