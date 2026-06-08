@@ -18,7 +18,7 @@ jobs:
           username: root
           password: ${{ secrets.UAT_SERVER_PASSWORD }}
           script: |
-            su - frappe -c "/home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn"
+            su - frappe -c "cd /home/frappe/frappe-bench/apps/ct_datalake && git clean -fd && /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn"
 
   deploy-prod:
     if: github.ref == 'refs/heads/master'
@@ -31,4 +31,4 @@ jobs:
           username: root
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           script: |
-            su - frappe -c "/home/frappe/deploy.sh ct_datalake master app.ctpai.vn"
+            su - frappe -c "cd /home/frappe/frappe-bench/apps/ct_datalake && git clean -fd && /home/frappe/deploy.sh ct_datalake master app.ctpai.vn"
