@@ -19,6 +19,8 @@ jobs:
           password: ${{ secrets.UAT_SERVER_PASSWORD }}
           script: |
             su - frappe -c '
+              export PATH=$PATH:/home/frappe/.local/bin
+              source /home/frappe/frappe-env/bin/activate
               cd /home/frappe/frappe-bench/apps/ct_datalake
               git clean -fd
               /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
@@ -46,6 +48,8 @@ jobs:
           password: ${{ secrets.PROD_SERVER_PASSWORD }}
           script: |
             su - frappe -c '
+              export PATH=$PATH:/home/frappe/.local/bin
+              source /home/frappe/frappe-env/bin/activate
               cd /home/frappe/frappe-bench/apps/ct_datalake
               git clean -fd
               /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
