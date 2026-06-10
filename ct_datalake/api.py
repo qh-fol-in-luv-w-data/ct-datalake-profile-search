@@ -594,7 +594,11 @@ def get_context():
     dept = ""
     role = ""
     try:
-        from ct_agent_hub.api import check_app_access
+        try:
+            from ct_agent_hub.api.core import check_app_access
+        except ImportError:
+            from ct_agent_hub.api import check_app_access
+
         agents_data = check_app_access("ct_datalake")
         user_depts = agents_data.get("user_departments", [])
         dept = ",".join(user_depts) if user_depts else ""
