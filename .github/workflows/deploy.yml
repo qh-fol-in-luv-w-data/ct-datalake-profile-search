@@ -16,7 +16,7 @@ jobs:
         with:
           host: ${{ secrets.UAT_SERVER_IP }}
           username: root
-          password: ${{ secrets.UAT_SERVER_PASSWORD }}
+          key: ${{ secrets.UAT_SERVER_SSH_KEY }}
           script: |
             su - frappe -c '
               export PATH=$PATH:/home/frappe/.local/bin
@@ -45,7 +45,7 @@ jobs:
         with:
           host: ${{ secrets.PROD_SERVER_IP }}
           username: root
-          password: ${{ secrets.PROD_SERVER_PASSWORD }}
+          key: ${{ secrets.PROD_SERVER_SSH_KEY }}
           script: |
             su - frappe -c '
               export PATH=$PATH:/home/frappe/.local/bin
