@@ -33,6 +33,8 @@ jobs:
                   sudo supervisorctl restart all || true
               fi
               cd /home/frappe/frappe-bench/apps/ct_datalake
+              # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
+              git remote rename upstream origin || true
               git clean -fd
               /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
               FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
@@ -50,6 +52,9 @@ jobs:
                   cd /home/frappe/frappe-bench
                   bench --site uatapp.ctpai.vn execute ct_agent_hub.api.admin.auto_register_agent --args "{\"repo_name\": \"2as-master-profile\"}"
               fi
+              echo "🔄 Tự động khởi động lại Frappe Worker để nạp module mới..."
+              sudo supervisorctl restart all || true
+
             '
 
   deploy-prod:
@@ -78,6 +83,8 @@ jobs:
                   sudo supervisorctl restart all || true
               fi
               cd /home/frappe/frappe-bench/apps/ct_datalake
+              # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
+              git remote rename upstream origin || true
               git clean -fd
               /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
               FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
@@ -95,4 +102,7 @@ jobs:
                   cd /home/frappe/frappe-bench
                   bench --site app.ctpai.vn execute ct_agent_hub.api.admin.auto_register_agent --args "{\"repo_name\": \"2as-master-profile\"}"
               fi
+              echo "🔄 Tự động khởi động lại Frappe Worker để nạp module mới..."
+              sudo supervisorctl restart all || true
+
             '
