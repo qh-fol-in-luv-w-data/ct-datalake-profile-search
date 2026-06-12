@@ -599,7 +599,7 @@ def get_context():
         except ImportError:
             from ct_agent_hub.api import check_app_access
 
-        agents_data = check_app_access("ct_datalake")
+        agents_data = check_app_access("2as-master-profile")
         user_depts = agents_data.get("user_departments", [])
         dept = ",".join(user_depts) if user_depts else ""
         role = agents_data.get("user_role", "")
