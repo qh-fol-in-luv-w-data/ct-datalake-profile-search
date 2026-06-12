@@ -40,6 +40,11 @@ jobs:
                   bench build --app ct_datalake
                   bench clear-cache
               fi
+              if [ -d "/home/frappe/frappe-bench/apps/ct_agent_hub" ]; then
+                  echo "🚀 Đăng ký App vào CT Agent Hub..."
+                  cd /home/frappe/frappe-bench
+                  bench --site uatapp.ctpai.vn execute ct_agent_hub.api.admin.auto_register_agent --args "{\"repo_name\": \"2as-master-profile\"}"
+              fi
             '
 
   deploy-prod:
@@ -74,5 +79,10 @@ jobs:
                   cd /home/frappe/frappe-bench
                   bench build --app ct_datalake
                   bench clear-cache
+              fi
+              if [ -d "/home/frappe/frappe-bench/apps/ct_agent_hub" ]; then
+                  echo "🚀 Đăng ký App vào CT Agent Hub..."
+                  cd /home/frappe/frappe-bench
+                  bench --site app.ctpai.vn execute ct_agent_hub.api.admin.auto_register_agent --args "{\"repo_name\": \"2as-master-profile\"}"
               fi
             '
