@@ -27,7 +27,7 @@ jobs:
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
                   echo "🚀 App ct_datalake chưa tồn tại. Đang tự động clone và cài đặt vào UAT..."
                   cd /home/frappe/frappe-bench
-                  bench get-app --branch uat https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
+                  bench get-app --branch uat https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
                   cd /home/frappe/frappe-bench/apps/ct_datalake
                   git remote rename upstream origin || true
                   cd /home/frappe/frappe-bench
@@ -88,7 +88,7 @@ jobs:
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
                   echo "🚀 App ct_datalake chưa tồn tại. Đang tự động clone và cài đặt vào PROD..."
                   cd /home/frappe/frappe-bench
-                  bench get-app --branch master https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
+                  bench get-app --branch master https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
                   cd /home/frappe/frappe-bench/apps/ct_datalake
                   git remote rename upstream origin || true
                   cd /home/frappe/frappe-bench
