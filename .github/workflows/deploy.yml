@@ -9,6 +9,9 @@ on:
 jobs:
   deploy-uat:
     if: github.ref == 'refs/heads/uat'
+    concurrency:
+      group: deploy-uat
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to UAT Server
@@ -36,6 +39,8 @@ jobs:
               # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
               git remote rename upstream origin || true
               git clean -fd
+              git fetch origin uat || true
+              git reset --hard origin/uat || true
               /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
               FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
               if [ -d "$FRONTEND_DIR" ]; then
@@ -59,6 +64,9 @@ jobs:
 
   deploy-prod:
     if: github.ref == 'refs/heads/master'
+    concurrency:
+      group: deploy-prod
+      cancel-in-progress: false
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to PROD Server
@@ -86,6 +94,8 @@ jobs:
               # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
               git remote rename upstream origin || true
               git clean -fd
+              git fetch origin master || true
+              git reset --hard origin/master || true
               /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
               FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
               if [ -d "$FRONTEND_DIR" ]; then
