@@ -41,6 +41,9 @@ jobs:
               git clean -fd
               git fetch origin uat || true
               git reset --hard origin/uat || true
+                            # Self-healing: Sửa lỗi file apps.txt bị dính chữ (vd: jd_generatorai_ats) do thiếu dấu enter
+              sed -i 's/\(frappe\|ct_agent_hub\|agent_ai_first\|cv_scoring_app\|jd_generator\|ai_ats\|cnb_2as\|social_media_evaluate\|voice_app\|zalo_bot\|chatbotharness_app\|ct_datalake\|crm_chatbot\|2as-employee-assessment\)/\1\n/g' /home/frappe/frappe-bench/sites/apps.txt || true
+              sed -i '/^$/d' /home/frappe/frappe-bench/sites/apps.txt || true
               if ! grep -q "^ct_datalake$" /home/frappe/frappe-bench/sites/apps.txt; then echo "ct_datalake" >> /home/frappe/frappe-bench/sites/apps.txt; fi
               /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
               FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
@@ -97,6 +100,9 @@ jobs:
               git clean -fd
               git fetch origin master || true
               git reset --hard origin/master || true
+                            # Self-healing: Sửa lỗi file apps.txt bị dính chữ (vd: jd_generatorai_ats) do thiếu dấu enter
+              sed -i 's/\(frappe\|ct_agent_hub\|agent_ai_first\|cv_scoring_app\|jd_generator\|ai_ats\|cnb_2as\|social_media_evaluate\|voice_app\|zalo_bot\|chatbotharness_app\|ct_datalake\|crm_chatbot\|2as-employee-assessment\)/\1\n/g' /home/frappe/frappe-bench/sites/apps.txt || true
+              sed -i '/^$/d' /home/frappe/frappe-bench/sites/apps.txt || true
               if ! grep -q "^ct_datalake$" /home/frappe/frappe-bench/sites/apps.txt; then echo "ct_datalake" >> /home/frappe/frappe-bench/sites/apps.txt; fi
               /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
               FRONTEND_DIR=/home/frappe/frappe-bench/apps/ct_datalake/frontend
