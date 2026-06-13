@@ -42,7 +42,7 @@ jobs:
               git fetch origin uat || true
               git reset --hard origin/uat || true
                             # Self-healing: Sửa lỗi file apps.txt bị dính chữ (vd: jd_generatorai_ats) do thiếu dấu enter
-              sed -i 's/\(ct_datalake\)/\n\1\n/g' /home/frappe/frappe-bench/sites/apps.txt || true
+              sed -i "s/\(ct_datalake\)/\n\1\n/g" /home/frappe/frappe-bench/sites/apps.txt || true
               sed -i '/^$/d' /home/frappe/frappe-bench/sites/apps.txt || true
               if ! grep -q "^ct_datalake$" /home/frappe/frappe-bench/sites/apps.txt; then echo "ct_datalake" >> /home/frappe/frappe-bench/sites/apps.txt; fi
               /home/frappe/deploy.sh ct_datalake uat uatapp.ctpai.vn
@@ -101,7 +101,7 @@ jobs:
               git fetch origin master || true
               git reset --hard origin/master || true
                             # Self-healing: Sửa lỗi file apps.txt bị dính chữ (vd: jd_generatorai_ats) do thiếu dấu enter
-              sed -i 's/\(ct_datalake\)/\n\1\n/g' /home/frappe/frappe-bench/sites/apps.txt || true
+              sed -i "s/\(ct_datalake\)/\n\1\n/g" /home/frappe/frappe-bench/sites/apps.txt || true
               sed -i '/^$/d' /home/frappe/frappe-bench/sites/apps.txt || true
               if ! grep -q "^ct_datalake$" /home/frappe/frappe-bench/sites/apps.txt; then echo "ct_datalake" >> /home/frappe/frappe-bench/sites/apps.txt; fi
               /home/frappe/deploy.sh ct_datalake master app.ctpai.vn
