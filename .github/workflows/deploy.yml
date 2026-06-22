@@ -27,9 +27,10 @@ jobs:
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
                   echo "🚀 App ct_datalake chưa tồn tại. Đang tự động clone và cài đặt vào UAT..."
                   cd /home/frappe/frappe-bench
-                  bench get-app --branch uat https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
+                  bench get-app --branch uat https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
                   cd /home/frappe/frappe-bench/apps/ct_datalake
                   git remote rename upstream origin || true
+              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
                   cd /home/frappe/frappe-bench
                   bench --site uatapp.ctpai.vn install-app ct_datalake || true
                   bench --site uatapp.ctpai.vn migrate
@@ -38,6 +39,7 @@ jobs:
               cd /home/frappe/frappe-bench/apps/ct_datalake
               # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
               git remote rename upstream origin || true
+              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
               git clean -fd
               git fetch origin uat || true
               git reset --hard origin/uat || true
@@ -88,9 +90,10 @@ jobs:
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
                   echo "🚀 App ct_datalake chưa tồn tại. Đang tự động clone và cài đặt vào PROD..."
                   cd /home/frappe/frappe-bench
-                  bench get-app --branch master https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
+                  bench get-app --branch master https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
                   cd /home/frappe/frappe-bench/apps/ct_datalake
                   git remote rename upstream origin || true
+              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
                   cd /home/frappe/frappe-bench
                   bench --site app.ctpai.vn install-app ct_datalake || true
                   bench --site app.ctpai.vn migrate
@@ -99,6 +102,7 @@ jobs:
               cd /home/frappe/frappe-bench/apps/ct_datalake
               # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
               git remote rename upstream origin || true
+              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
               git clean -fd
               git fetch origin master || true
               git reset --hard origin/master || true

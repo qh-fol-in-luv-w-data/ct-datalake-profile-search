@@ -140,7 +140,8 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
         return {"query": query, "mode": mode, "total_found": 0, "llm_analysis": ""}
 
     try:
-        analysis = rerank(query=query, candidates=raw[:top_k], mode=mode)
+        session_name, action_name = get_current_session_info()
+        analysis = rerank(query=query, candidates=raw[:top_k], mode=mode, session_info=(session_name, action_name))
     except Exception as e:
         frappe.throw(f"LLM rerank error: {str(e)}")
 
@@ -166,11 +167,13 @@ def jd_match(jd_text: str, mode: str = "in", top_k: int = 5, fast: bool = False)
     try:
         top_k = int(top_k)
         fast = frappe.parse_json(fast)
+        session_name, action_name = get_current_session_info()
         result = match_jd(
             jd_text=jd_text,
             mode=mode,
             top_k=top_k,
             fast=fast,
+            session_info=(session_name, action_name)
         )
     except Exception as e:
         frappe.throw(f"JD match error: {str(e)}")
@@ -218,11 +221,13 @@ def jd_match_upload():
         frappe.throw(str(e))
 
     try:
+        session_name, action_name = get_current_session_info()
         result = match_jd(
             jd_text=jd_text,
             mode=mode,
             top_k=top_k,
             fast=fast,
+            session_info=(session_name, action_name)
         )
     except Exception as e:
         frappe.throw(f"JD match error: {str(e)}")
@@ -481,7 +486,8 @@ def jd_parse_only(query: str):
     if not get_openai_client():
         frappe.throw("OPENAI_API_KEY chưa cấu hình")
     try:
-        parsed = parse_jd(query)
+        session_name, action_name = get_current_session_info()
+        parsed = parse_jd(query, session_info=(session_name, action_name))
     except Exception as e:
         frappe.throw(str(e))
     return {"parsed_jd": parsed}
@@ -546,6 +552,18 @@ Yêu cầu:
             temperature=0.7,
         )
         draft_text = response.choices[0].message.content
+        
+        # Log token usage
+        session_name, action_name = get_current_session_info()
+        if session_name:
+            if hasattr(response, "usage") and response.usage:
+                _logger.log_ai_call(
+                    session_name=session_name,
+                    action_name=action_name,
+                    prompt_tokens=response.usage.prompt_tokens,
+                    completion_tokens=response.usage.completion_tokens,
+                    total_tokens=response.usage.total_tokens,
+                )
     except Exception as e:
         frappe.throw(f"GPT error: {str(e)}")
 
@@ -582,6 +600,11 @@ def _resolve_session(session_id: str) -> str:
     except Exception:
         return ""
 
+def get_current_session_info():
+    session_id = frappe.get_request_header("X-Session-Id") or frappe.form_dict.get("session_id")
+    action_name = frappe.get_request_header("X-Action-Name") or frappe.form_dict.get("action_name") or "Search LLM"
+    session_name = _resolve_session(session_id) if session_id else ""
+    return session_name, action_name
 
 @frappe.whitelist(allow_guest=False)
 def get_context():

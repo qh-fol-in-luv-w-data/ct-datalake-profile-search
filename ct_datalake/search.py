@@ -63,7 +63,8 @@ def _search_external(query: str, top_k: int) -> list:
         items = data.get("results", data) if isinstance(data, dict) else data
     except Exception as e:
         frappe.log_error(title="[search] External FTS error", message=str(e))
-        frappe.throw(f"Lỗi khi gọi API tìm kiếm bên ngoài: {str(e)}")
+        # Do not throw exception to prevent breaking the flow
+        return []
 
     return [
         {
