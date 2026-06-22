@@ -125,7 +125,8 @@ Trả lời (chỉ JSON):
 def rerank(
     query,
     candidates,
-    mode="in"
+    mode="in",
+    session_info=None
 ):
 
     candidates = candidates[:10]
@@ -179,6 +180,19 @@ def rerank(
             temperature=0.2,
             response_format={"type": "json_object"}
         )
+        
+        if session_info and session_info[0]:
+            session_name, action_name = session_info
+            from ct_datalake.utils.activity_logger import ActivityLogger
+            _log = ActivityLogger(prefix="DL", module="CT DataLake")
+            if hasattr(response, "usage") and response.usage:
+                _log.log_ai_call(
+                    session_name=session_name,
+                    action_name=action_name,
+                    prompt_tokens=response.usage.prompt_tokens,
+                    completion_tokens=response.usage.completion_tokens,
+                    total_tokens=response.usage.total_tokens,
+                )
 
         result_str = (
             response

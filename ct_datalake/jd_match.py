@@ -247,7 +247,7 @@ def extract_text_from_upload(uploaded_file) -> str:
 # ========================
 # STEP 1 – PARSE JD
 # ========================
-def parse_jd(jd_text: str) -> dict:
+def parse_jd(jd_text: str, session_info=None) -> dict:
     system_prompt = """
 Bạn là chuyên gia HR và tuyển dụng.
 
@@ -281,6 +281,19 @@ Trả về JSON thuần.
         temperature=0.1,
         response_format={"type": "json_object"},
     )
+
+    if session_info and session_info[0]:
+        session_name, action_name = session_info
+        from ct_datalake.utils.activity_logger import ActivityLogger
+        _log = ActivityLogger(prefix="DL", module="CT DataLake")
+        if hasattr(response, "usage") and response.usage:
+            _log.log_ai_call(
+                session_name=session_name,
+                action_name=action_name,
+                prompt_tokens=response.usage.prompt_tokens,
+                completion_tokens=response.usage.completion_tokens,
+                total_tokens=response.usage.total_tokens,
+            )
 
     raw = response.choices[0].message.content or "{}"
 
@@ -361,6 +374,7 @@ def _rerank_candidates(
     candidates: list[dict],
     mode: str,
     top_k: int = 5,
+    session_info=None,
 ) -> list[dict]:
 
     if not candidates:
@@ -460,6 +474,19 @@ Trả về JSON:
         response_format={"type": "json_object"},
     )
 
+    if session_info and session_info[0]:
+        session_name, action_name = session_info
+        from ct_datalake.utils.activity_logger import ActivityLogger
+        _log = ActivityLogger(prefix="DL", module="CT DataLake")
+        if hasattr(response, "usage") and response.usage:
+            _log.log_ai_call(
+                session_name=session_name,
+                action_name=action_name,
+                prompt_tokens=response.usage.prompt_tokens,
+                completion_tokens=response.usage.completion_tokens,
+                total_tokens=response.usage.total_tokens,
+            )
+
     raw = response.choices[0].message.content or "{}"
 
     try:
@@ -509,6 +536,7 @@ def _rerank_g600_candidates(
     keywords: list,
     candidates: list[dict],
     top_k: int = 5,
+    session_info=None,
 ) -> list[dict]:
 
     if not candidates:
@@ -588,6 +616,19 @@ Trả về JSON:
         response_format={"type": "json_object"},
     )
 
+    if session_info and session_info[0]:
+        session_name, action_name = session_info
+        from ct_datalake.utils.activity_logger import ActivityLogger
+        _log = ActivityLogger(prefix="DL", module="CT DataLake")
+        if hasattr(response, "usage") and response.usage:
+            _log.log_ai_call(
+                session_name=session_name,
+                action_name=action_name,
+                prompt_tokens=response.usage.prompt_tokens,
+                completion_tokens=response.usage.completion_tokens,
+                total_tokens=response.usage.total_tokens,
+            )
+
     raw = response.choices[0].message.content or "{}"
     try:
         result = json.loads(raw)
@@ -625,9 +666,10 @@ def match_jd(
     mode: Literal["in", "out"] = "in",
     top_k: int = 5,
     fast: bool = False,
+    session_info=None,
 ) -> dict:
 
-    parsed = parse_jd(jd_text)
+    parsed = parse_jd(jd_text, session_info=session_info)
 
     raw_candidates = _retrieve_candidates(
         parsed,
@@ -649,7 +691,8 @@ def match_jd(
         parsed_jd=parsed,
         candidates=raw_candidates,
         mode=mode,
-        top_k=top_k
+        top_k=top_k,
+        session_info=session_info
     )
 
     return {
