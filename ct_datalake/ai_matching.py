@@ -25,6 +25,46 @@ def get_redis_client() -> redis.Redis:
         decode_responses=True
     )
 
+def _log_tokens(response, label=""):
+    try:
+        import frappe
+        from ct_datalake.utils.activity_logger import ActivityLogger
+        logger = ActivityLogger("DL", "ct_datalake")
+        
+        session_name = ""
+        session_id = None
+        if hasattr(frappe.local, "request") and frappe.local.request:
+            session_id = frappe.request.headers.get("X-App-Session-Id") or frappe.request.headers.get("x-app-session-id")
+        
+        if session_id:
+            session_name = frappe.db.get_value("DL Session", {"session_id": session_id}, "name")
+            if not session_name:
+                session_name = logger.create_session(session_id, dept="AI Matching", role="User")
+        else:
+            import uuid
+            session_name = logger.create_session(f"fallback_{uuid.uuid4().hex[:8]}", dept="Auto", role="System")
+            
+        action_name = logger.start_action(session_name, action_type="ai_call", input_summary=label)
+        
+        usage = getattr(response, "usage", None)
+        model = getattr(response, "model", "gpt-4o")
+        prompt_tokens = usage.prompt_tokens if usage else 0
+        completion_tokens = usage.completion_tokens if usage else 0
+        
+        logger.log_ai_call(
+            session_name=session_name,
+            action_name=action_name,
+            call_type=label or "ai_call",
+            ai_model=model,
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            status="success"
+        )
+        logger.finish_action(action_name, status="success")
+    except Exception as e:
+        import frappe
+        frappe.logger("ct_datalake").error(f"[_log_tokens] Error: {e}")
+
 VISION_PROMPT = '''
 Đây là tờ trình kỹ thuật/hành chính. Hãy đọc TOÀN BỘ nội dung (kể cả bảng biểu).
 
@@ -102,6 +142,7 @@ def extract_keywords(pdf_path: str, gpt_client: OpenAI) -> list[dict]:
         response_format={"type": "json_object"},
         messages=[{"role": "user", "content": content}]
     )
+    _log_tokens(resp, "extract_keywords")
 
     result  = json.loads(resp.choices[0].message.content)
     domains = result.get("domains", [])
@@ -139,6 +180,7 @@ def extract_jd_requirements(pdf_path: str, gpt_client: OpenAI) -> dict:
         response_format={"type": "json_object"},
         messages=[{"role": "user", "content": content}]
     )
+    _log_tokens(resp, "extract_jd_requirements")
 
     result = json.loads(resp.choices[0].message.content)
     print(f"  ✅ Đã trích xuất xong JD: {result.get('domain', '')}")
