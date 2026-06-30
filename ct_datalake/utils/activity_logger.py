@@ -114,14 +114,23 @@ class ActivityLogger:
             sess.total_completion_tokens = (sess.total_completion_tokens or 0) + completion_tokens
             sess.total_tokens_used      = (sess.total_tokens_used or 0) + prompt_tokens + completion_tokens
             
-            total_used_now = prompt_tokens + completion_tokens
-            if ai_model and total_used_now > 0:
+            if ai_model and (prompt_tokens > 0 or completion_tokens > 0):
                 import json
                 try:
                     breakdown = json.loads(sess.token_breakdown) if sess.token_breakdown else {}
                 except:
                     breakdown = {}
-                breakdown[ai_model] = breakdown.get(ai_model, 0) + total_used_now
+                
+                current = breakdown.get(ai_model, {"input": 0, "output": 0})
+                if isinstance(current, int):
+                    current = {"input": current, "output": 0}
+                elif not isinstance(current, dict):
+                    current = {"input": 0, "output": 0}
+                    
+                current["input"] += prompt_tokens
+                current["output"] += completion_tokens
+                breakdown[ai_model] = current
+                
                 sess.token_breakdown = json.dumps(breakdown, ensure_ascii=False)
                 
             sess.last_active_at          = now_datetime()
