@@ -18,8 +18,20 @@ def get_openai_client() -> OpenAI:
     return OpenAI(api_key=api_key)
 
 def get_redis_client() -> redis.Redis:
+    redis_host = frappe.conf.get("redis_host")
+    if not redis_host:
+        redis_cache = frappe.conf.get("redis_cache")
+        if redis_cache:
+            try:
+                from urllib.parse import urlparse
+                redis_host = urlparse(redis_cache).hostname
+            except Exception:
+                redis_host = "localhost"
+        else:
+            redis_host = "localhost"
+
     return redis.Redis(
-        host=frappe.conf.get("redis_host", "localhost"),
+        host=redis_host,
         port=frappe.conf.get("redis_port", 6379),
         password=frappe.conf.get("redis_password", ""),
         decode_responses=True
