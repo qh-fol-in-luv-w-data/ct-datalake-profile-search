@@ -18,10 +18,10 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.UAT_SERVER_IP }}
-          username: root
+          username: frappe
           key: ${{ secrets.UAT_SERVER_SSH_KEY }}
           script: |
-            su - frappe -c '
+            
               export PATH=$PATH:/home/frappe/.local/bin
               source /home/frappe/frappe-env/bin/activate
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
@@ -68,8 +68,6 @@ jobs:
               echo "🔄 Tự động khởi động lại Frappe Worker để nạp module mới..."
               sudo supervisorctl restart all || true
 
-            '
-
   deploy-prod:
     if: github.ref == 'refs/heads/master'
     concurrency:
@@ -81,10 +79,10 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.PROD_SERVER_IP }}
-          username: root
+          username: frappe
           key: ${{ secrets.PROD_SERVER_SSH_KEY }}
           script: |
-            su - frappe -c '
+            
               export PATH=$PATH:/home/frappe/.local/bin
               source /home/frappe/frappe-env/bin/activate
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
@@ -130,5 +128,3 @@ jobs:
               fi
               echo "🔄 Tự động khởi động lại Frappe Worker để nạp module mới..."
               sudo supervisorctl restart all || true
-
-            '

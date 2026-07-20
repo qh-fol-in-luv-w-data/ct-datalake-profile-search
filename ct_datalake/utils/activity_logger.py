@@ -100,7 +100,8 @@ class ActivityLogger:
 
     def _increment_session_counters(self, session_name: str,
                                     actions: int = 0, ai_calls: int = 0,
-                                    prompt_tokens: int = 0, completion_tokens: int = 0):
+                                    prompt_tokens: int = 0, completion_tokens: int = 0,
+                                    ai_model: str = ""):
         """Tăng counter trong session. Gọi sau mỗi action/ai_call."""
         if not session_name:
             return
@@ -111,7 +112,27 @@ class ActivityLogger:
             sess.total_ai_calls          = (sess.total_ai_calls or 0) + ai_calls
             sess.total_prompt_tokens     = (sess.total_prompt_tokens or 0) + prompt_tokens
             sess.total_completion_tokens = (sess.total_completion_tokens or 0) + completion_tokens
-            sess.total_tokens_used       = (sess.total_tokens_used or 0) + prompt_tokens + completion_tokens
+            sess.total_tokens_used      = (sess.total_tokens_used or 0) + prompt_tokens + completion_tokens
+            
+            if ai_model and (prompt_tokens > 0 or completion_tokens > 0):
+                import json
+                try:
+                    breakdown = json.loads(sess.token_breakdown) if sess.token_breakdown else {}
+                except:
+                    breakdown = {}
+                
+                current = breakdown.get(ai_model, {"input": 0, "output": 0})
+                if isinstance(current, int):
+                    current = {"input": current, "output": 0}
+                elif not isinstance(current, dict):
+                    current = {"input": 0, "output": 0}
+                    
+                current["input"] += prompt_tokens
+                current["output"] += completion_tokens
+                breakdown[ai_model] = current
+                
+                sess.token_breakdown = json.dumps(breakdown, ensure_ascii=False)
+                
             sess.last_active_at          = now_datetime()
             sess.save(ignore_permissions=True)
             frappe.db.commit()
@@ -215,6 +236,7 @@ class ActivityLogger:
                 session_name, ai_calls=1,
                 prompt_tokens=prompt_tokens,
                 completion_tokens=completion_tokens,
+                ai_model=ai_model
             )
             return doc.name
         except Exception as e:

@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { ClipboardList, Upload, Rocket, Loader2, FileCheck, ChevronDown, ChevronUp } from 'lucide-vue-next'
 import CandidateCard from './CandidateCard.vue'
+import { getCsrfToken } from '../utils/session.js'
 
 const selectedFile = ref(null)
 const topK = ref(5)
@@ -35,7 +36,10 @@ const handleAnalyze = async () => {
     formData.append('score_threshold', scoreThreshold.value)
 
     const response = await axios.post('/api/method/ct_datalake.api.g600_analyze', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 
+        'Content-Type': 'multipart/form-data',
+        'X-Frappe-CSRF-Token': getCsrfToken()
+      }
     })
 
     results.value = response.data.message

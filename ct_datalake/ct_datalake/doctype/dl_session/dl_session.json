@@ -4,11 +4,22 @@
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
-    "session_id", "user", "ip_address", "user_agent",
-    "department", "role_param", "started_at", "last_active_at",
+    "session_id",
+    "user",
+    "ip_address",
+    "user_agent",
+    "department",
+    "role_param",
+    "started_at",
+    "last_active_at",
     "section_stats",
-    "total_actions", "total_ai_calls", "total_tokens_used",
-    "total_prompt_tokens", "total_completion_tokens", "status"
+    "total_actions",
+    "total_ai_calls",
+    "total_tokens_used",
+    "total_prompt_tokens",
+    "total_completion_tokens",
+    "token_breakdown",
+    "status"
   ],
   "fields": [
     {
@@ -107,6 +118,13 @@
       "read_only": 1
     },
     {
+      "fieldname": "token_breakdown",
+      "fieldtype": "Code",
+      "options": "JSON",
+      "label": "Token Breakdown",
+      "read_only": 1
+    },
+    {
       "fieldname": "status",
       "fieldtype": "Select",
       "label": "Status",
@@ -122,9 +140,16 @@
   "owner": "Administrator",
   "permissions": [
     {
-      "create": 1, "delete": 1, "email": 1, "export": 1,
-      "print": 1, "read": 1, "report": 1,
-      "role": "System Manager", "share": 1, "write": 1
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
     }
   ],
   "sort_field": "started_at",
