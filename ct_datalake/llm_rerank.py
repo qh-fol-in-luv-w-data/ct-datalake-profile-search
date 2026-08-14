@@ -57,7 +57,7 @@ def make_cache_key(query, candidates, mode="in"):
         sort_keys=True
     )
 
-    return hashlib.md5(raw.encode()).hexdigest()
+    return hashlib.sha256(raw.encode()).hexdigest()
 
 
 # ========================
