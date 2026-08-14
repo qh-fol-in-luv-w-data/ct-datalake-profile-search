@@ -55,7 +55,7 @@ def _search_external(query: str, top_k: int) -> list:
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             },
             params={"q": query, "limit": top_k},
-            timeout=10, verify=False,
+            timeout=10, verify=True,
         )
         resp.raise_for_status()
         data  = resp.json()
@@ -99,7 +99,7 @@ def _search_internal(query: str, top_k: int) -> list:
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
             },
             params={"q": query, "limit": top_k},
-            timeout=10, verify=False,
+            timeout=10, verify=True,
         )
         resp.raise_for_status()
         items = resp.json()
