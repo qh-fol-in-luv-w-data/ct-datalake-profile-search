@@ -6,6 +6,8 @@ on:
       - uat
       - master
 
+permissions: read-all
+
 jobs:
   deploy-uat:
     if: github.ref == 'refs/heads/uat'
@@ -15,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to UAT Server
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@55dabf81b49d4120609345970c91507e2d734799 # v1.0.0
         with:
           host: ${{ secrets.UAT_SERVER_IP }}
           username: frappe
@@ -27,10 +29,10 @@ jobs:
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
                   echo "🚀 App ct_datalake chưa tồn tại. Đang tự động clone và cài đặt vào UAT..."
                   cd /home/frappe/frappe-bench
-                  bench get-app --branch uat https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
+                  bench get-app --branch uat https://${{ secrets.PAT_GITHUB }}@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
                   cd /home/frappe/frappe-bench/apps/ct_datalake
                   git remote rename upstream origin || true
-              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
+              git remote set-url origin https://${{ secrets.PAT_GITHUB }}@github.com/CTGroup-DAIT/2as-master-profile.git || true
                   cd /home/frappe/frappe-bench
                   bench --site uatapp.ctpai.vn install-app ct_datalake || true
                   bench --site uatapp.ctpai.vn migrate
@@ -39,7 +41,7 @@ jobs:
               cd /home/frappe/frappe-bench/apps/ct_datalake
               # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
               git remote rename upstream origin || true
-              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
+              git remote set-url origin https://${{ secrets.PAT_GITHUB }}@github.com/CTGroup-DAIT/2as-master-profile.git || true
               git clean -fd
               git fetch origin uat || true
               git reset --hard origin/uat || true
@@ -76,7 +78,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to PROD Server
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@55dabf81b49d4120609345970c91507e2d734799 # v1.0.0
         with:
           host: ${{ secrets.PROD_SERVER_IP }}
           username: frappe
@@ -88,10 +90,10 @@ jobs:
               if [ ! -d "/home/frappe/frappe-bench/apps/ct_datalake" ]; then
                   echo "🚀 App ct_datalake chưa tồn tại. Đang tự động clone và cài đặt vào PROD..."
                   cd /home/frappe/frappe-bench
-                  bench get-app --branch master https://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@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
+                  bench get-app --branch master https://${{ secrets.PAT_GITHUB }}@github.com/CTGroup-DAIT/2as-master-profile.git --resolve-deps || true
                   cd /home/frappe/frappe-bench/apps/ct_datalake
                   git remote rename upstream origin || true
-              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
+              git remote set-url origin https://${{ secrets.PAT_GITHUB }}@github.com/CTGroup-DAIT/2as-master-profile.git || true
                   cd /home/frappe/frappe-bench
                   bench --site app.ctpai.vn install-app ct_datalake || true
                   bench --site app.ctpai.vn migrate
@@ -100,7 +102,7 @@ jobs:
               cd /home/frappe/frappe-bench/apps/ct_datalake
               # Self-healing: Tự động sửa remote nếu kẹt từ lần cài đặt cũ
               git remote rename upstream origin || true
-              git remote set-url origin https://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@github.com/CTGroup-DAIT/2as-master-profile.git || true
+              git remote set-url origin https://${{ secrets.PAT_GITHUB }}@github.com/CTGroup-DAIT/2as-master-profile.git || true
               git clean -fd
               git fetch origin master || true
               git reset --hard origin/master || true

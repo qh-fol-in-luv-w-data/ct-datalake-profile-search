@@ -73,7 +73,7 @@ def semantic_search(query: str, mode: str = "in", top_k: int = 5):
       mode=in  → Internal (local Redis + Frappe DB)
       mode=out → External (server Redis Stack + synonyms)
     """
-    cache_key = f"semantic_search_{hashlib.md5(f'{query}_{mode}_{top_k}'.encode()).hexdigest()}"
+    cache_key = f"semantic_search_{hashlib.sha256(f'{query}_{mode}_{top_k}'.encode()).hexdigest()}"
     
     use_cache = str(frappe.form_dict.get("use_cache", "1"))
     if use_cache == "1":
@@ -113,7 +113,7 @@ def semantic_search_llm(query: str, mode: str = "in", top_k: int = 5):
     """
     BM25 search rồi đưa kết quả vào LLM server-side để phân tích.
     """
-    cache_key = f"semantic_search_llm_{hashlib.md5(f'{query}_{mode}_{top_k}'.encode()).hexdigest()}"
+    cache_key = f"semantic_search_llm_{hashlib.sha256(f'{query}_{mode}_{top_k}'.encode()).hexdigest()}"
     
     use_cache = str(frappe.form_dict.get("use_cache", "1"))
     if use_cache == "1":
@@ -263,11 +263,11 @@ def jd_analyze():
     file_bytes = file.stream.read()
 
     import hashlib
-    hash_md5 = hashlib.md5()
-    hash_md5.update(file_bytes)
-    hash_md5.update(source.encode())
-    hash_md5.update(str(top_k).encode())
-    cache_key = f"jd_analyze_{hash_md5.hexdigest()}"
+    hash_sha256 = hashlib.sha256()
+    hash_sha256.update(file_bytes)
+    hash_sha256.update(source.encode())
+    hash_sha256.update(str(top_k).encode())
+    cache_key = f"jd_analyze_{hash_sha256.hexdigest()}"
     
     use_cache = str(frappe.form_dict.get("use_cache", "1"))
     if use_cache == "1":
@@ -382,11 +382,11 @@ def g600_analyze():
     file_bytes = file.stream.read()
 
     import hashlib
-    hash_md5 = hashlib.md5()
-    hash_md5.update(file_bytes)
-    hash_md5.update(source.encode())
-    hash_md5.update(str(top_k).encode())
-    cache_key = f"g600_analyze_{hash_md5.hexdigest()}"
+    hash_sha256 = hashlib.sha256()
+    hash_sha256.update(file_bytes)
+    hash_sha256.update(source.encode())
+    hash_sha256.update(str(top_k).encode())
+    cache_key = f"g600_analyze_{hash_sha256.hexdigest()}"
     
     use_cache = str(frappe.form_dict.get("use_cache", "1"))
     if use_cache == "1":

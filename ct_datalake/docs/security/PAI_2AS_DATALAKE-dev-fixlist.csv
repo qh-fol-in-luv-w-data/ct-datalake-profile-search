@@ -1,0 +1,393 @@
+Category,Package,Type,Severity/Prob,Status,File Path,Line,AI Summary,Rule Key
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,30,"Nguyên nhân: Tìm thấy token GitHub trong file cấu hình.
+Cách khắc phục: Xóa token khỏi file .github/workflows/deploy.yml.",external_secretlint (MegaLinter REPOSITORY_SECRETLINT):@secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-github
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,30,"Nguyên nhân: Phát hiện bí mật github-pat trong tệp .github/workflows/deploy.yml.
+Cách khắc phục: Xóa bí mật github-pat khỏi tệp .github/workflows/deploy.yml.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):github-pat
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,33,"Nguyên nhân: Phát hiện bí mật github-pat trong tệp .github/workflows/deploy.yml.
+Cách khắc phục: Xóa bí mật github-pat khỏi tệp .github/workflows/deploy.yml.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):github-pat
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,.github/workflows/deploy.yml,1,"Nguyên nhân: Quyền workflow cấp cao nhất được đặt là write-all cho phép ghi tất cả phạm vi.
+Cách khắc phục: Giới hạn permissions ở cấp workflow chỉ đọc hoặc ghi tối thiểu cần thiết.",external_Checkov (MegaLinter REPOSITORY_CHECKOV):CKV2_GHA_1
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,42,"Nguyên nhân: Phát hiện bí mật github-pat trong tệp .github/workflows/deploy.yml.
+Cách khắc phục: Xóa bí mật github-pat khỏi tệp .github/workflows/deploy.yml.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):github-pat
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,33,"Nguyên nhân: Tìm thấy token GitHub trong file cấu hình.
+Cách khắc phục: Xóa token khỏi file .github/workflows/deploy.yml.",external_secretlint (MegaLinter REPOSITORY_SECRETLINT):@secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-github
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,42,"Nguyên nhân: Token truy cập cá nhân GitHub bị lộ trong file workflow.
+Cách khắc phục: Xóa token khỏi file, lưu vào GitHub Secrets và tham chiếu qua ${{ secrets.NAME }}.",external_kingfisher (MegaLinter REPOSITORY_KINGFISHER):GitHub Personal Access Token
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,42,"Nguyên nhân: Tìm thấy token GitHub trong file cấu hình.
+Cách khắc phục: Xóa token khỏi file .github/workflows/deploy.yml.",external_secretlint (MegaLinter REPOSITORY_SECRETLINT):@secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-github
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,91,"Nguyên nhân: Tìm thấy token GitHub trong file cấu hình.
+Cách khắc phục: Xóa token khỏi file .github/workflows/deploy.yml.",external_secretlint (MegaLinter REPOSITORY_SECRETLINT):@secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-github
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,94,"Nguyên nhân: Tìm thấy token GitHub trong file cấu hình.
+Cách khắc phục: Xóa token khỏi file .github/workflows/deploy.yml.",external_secretlint (MegaLinter REPOSITORY_SECRETLINT):@secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-github
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,91,"Nguyên nhân: Phát hiện bí mật github-pat trong tệp .github/workflows/deploy.yml.
+Cách khắc phục: Xóa bí mật github-pat khỏi tệp .github/workflows/deploy.yml.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):github-pat
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,94,"Nguyên nhân: Phát hiện bí mật github-pat trong tệp .github/workflows/deploy.yml.
+Cách khắc phục: Xóa bí mật github-pat khỏi tệp .github/workflows/deploy.yml.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):github-pat
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,103,"Nguyên nhân: Phát hiện bí mật github-pat trong tệp .github/workflows/deploy.yml.
+Cách khắc phục: Xóa bí mật github-pat khỏi tệp .github/workflows/deploy.yml.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):github-pat
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,103,"Nguyên nhân: Tìm thấy token GitHub trong file cấu hình.
+Cách khắc phục: Xóa token khỏi file .github/workflows/deploy.yml.",external_secretlint (MegaLinter REPOSITORY_SECRETLINT):@secretlint/secretlint-rule-preset-recommend > @secretlint/secretlint-rule-github
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,101,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,121,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,ct_datalake/api.py,559,"Nguyên nhân: Mã nguồn có các khối điều kiện lồng nhau không cần thiết, làm tăng độ phức tạp và giảm khả năng đọc.
+Cách khắc phục: Gộp các câu lệnh `if` có thể gộp lại, hoặc trích xuất điều kiện phức tạp thành một hàm/biến có tên để làm phẳng cấu trúc.",python:S1066
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/api.py,560,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/api.py,565,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/jd_match.py,288,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/jd_match.py,290,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/jd_match.py,295,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/jd_match.py,371,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/jd_match.py,482,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/jd_match.py,487,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/jd_match.py,534,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/jd_match.py,624,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/jd_match.py,629,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/llm_rerank.py,125,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/llm_rerank.py,189,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/llm_rerank.py,194,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,33,"Nguyên nhân: Thông tin xác thực nhạy cảm được lưu trữ cùng với mã nguồn ứng dụng có thể bị lộ ra môi trường không mong muốn.
+Cách khắc phục: Thu hồi và xóa bí mật đã bị rò rỉ khỏi mã nguồn, sau đó sử dụng kho lưu trữ bí mật để quản lý an toàn.",secrets:S6689
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,42,"Nguyên nhân: Thông tin xác thực nhạy cảm được lưu trữ cùng với mã nguồn ứng dụng có thể bị lộ ra môi trường không mong muốn.
+Cách khắc phục: Thu hồi và xóa bí mật đã bị rò rỉ khỏi mã nguồn, sau đó sử dụng kho lưu trữ bí mật để quản lý an toàn.",secrets:S6689
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,94,"Nguyên nhân: Thông tin xác thực nhạy cảm được lưu trữ cùng với mã nguồn ứng dụng có thể bị lộ ra môi trường không mong muốn.
+Cách khắc phục: Thu hồi và xóa bí mật đã bị rò rỉ khỏi mã nguồn, sau đó sử dụng kho lưu trữ bí mật để quản lý an toàn.",secrets:S6689
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,103,"Nguyên nhân: Thông tin xác thực nhạy cảm được lưu trữ cùng với mã nguồn ứng dụng có thể bị lộ ra môi trường không mong muốn.
+Cách khắc phục: Thu hồi và xóa bí mật đã bị rò rỉ khỏi mã nguồn, sau đó sử dụng kho lưu trữ bí mật để quản lý an toàn.",secrets:S6689
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,30,"Nguyên nhân: Thông tin xác thực nhạy cảm được lưu trữ cùng với mã nguồn ứng dụng có thể bị lộ ra môi trường không mong muốn.
+Cách khắc phục: Thu hồi và xóa bí mật đã bị rò rỉ khỏi mã nguồn, sau đó sử dụng kho lưu trữ bí mật để quản lý an toàn.",secrets:S6689
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,.github/workflows/deploy.yml,91,"Nguyên nhân: Thông tin xác thực nhạy cảm được lưu trữ cùng với mã nguồn ứng dụng có thể bị lộ ra môi trường không mong muốn.
+Cách khắc phục: Thu hồi và xóa bí mật đã bị rò rỉ khỏi mã nguồn, sau đó sử dụng kho lưu trữ bí mật để quản lý an toàn.",secrets:S6689
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/search.py,51,"Nguyên nhân: Xác thực chứng chỉ đã bị vô hiệu hóa, cho phép kết nối không an toàn.
+Cách khắc phục: Bật lại xác thực chứng chỉ trong mã nguồn.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.requests.security.disabled-cert-validation.disabled-cert-validation
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/search.py,95,"Nguyên nhân: Xác thực chứng chỉ đã bị vô hiệu hóa, cho phép kết nối không an toàn.
+Cách khắc phục: Bật lại xác thực chứng chỉ trong mã nguồn.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.requests.security.disabled-cert-validation.disabled-cert-validation
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/ct_datalake_config.py,61,"Nguyên nhân: Lưu trữ token hoặc khóa trong mã nguồn không an toàn.
+Cách khắc phục: Di chuyển token và khóa ra khỏi mã nguồn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS173237
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,ct_datalake/ct_datalake_config.py,61,"Nguyên nhân: Phát hiện khóa bí mật generic-api-key trong file ct_datalake/ct_datalake_config.py.
+Cách khắc phục: Xóa hoặc bảo vệ khóa bí mật trong file ct_datalake/ct_datalake_config.py.",external_betterleaks (MegaLinter REPOSITORY_BETTERLEAKS):generic-api-key
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,ct_datalake/ai_matching.py,17,"Nguyên nhân: Hàm trả về giá trị không khớp với kiểu dữ liệu đã chỉ định.
+Cách khắc phục: Đảm bảo giá trị trả về của hàm phù hợp với kiểu dữ liệu đã được gán.",python:S5886
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,76,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,76,"Nguyên nhân: Sử dụng MD5 băm yếu cho bảo mật.
+Cách khắc phục: Xem xét sử dụng usedforsecurity=False.",external_bandit:B324
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,76,"Nguyên nhân: Hàm băm MD5 được phát hiện không an toàn vì không chống được va chạm, không phù hợp làm chữ ký mật mã.
+Cách khắc phục: Thay thế MD5 bằng SHA256 hoặc SHA3 trong file ct_datalake/api.py tại dòng 76.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,116,"Nguyên nhân: Hàm băm MD5 được phát hiện không an toàn vì không chống được va chạm, không phù hợp làm chữ ký mật mã.
+Cách khắc phục: Thay thế MD5 bằng SHA256 hoặc SHA3 trong file ct_datalake/api.py tại dòng 76.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,116,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,116,"Nguyên nhân: Sử dụng MD5 băm yếu cho bảo mật.
+Cách khắc phục: Xem xét sử dụng usedforsecurity=False.",external_bandit:B324
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/api.py,127,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/api.py,195,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/api.py,199,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/api.py,243,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,266,"Nguyên nhân: Sử dụng MD5 băm yếu cho bảo mật.
+Cách khắc phục: Xem xét sử dụng usedforsecurity=False.",external_bandit:B324
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,266,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,266,"Nguyên nhân: Hàm băm MD5 được phát hiện không an toàn vì không chống được va chạm, không phù hợp làm chữ ký mật mã.
+Cách khắc phục: Thay thế MD5 bằng SHA256 hoặc SHA3 trong file ct_datalake/api.py tại dòng 76.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,267,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,268,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,269,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,270,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/api.py,362,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,385,"Nguyên nhân: Sử dụng MD5 băm yếu cho bảo mật.
+Cách khắc phục: Xem xét sử dụng usedforsecurity=False.",external_bandit:B324
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,385,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/api.py,385,"Nguyên nhân: Hàm băm MD5 được phát hiện không an toàn vì không chống được va chạm, không phù hợp làm chữ ký mật mã.
+Cách khắc phục: Thay thế MD5 bằng SHA256 hoặc SHA3 trong file ct_datalake/api.py tại dòng 76.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,386,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,387,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,388,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/api.py,389,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/search.py,58,"Nguyên nhân: Xác thực chứng chỉ TLS bị vô hiệu hóa, dẫn đến không kiểm tra tính hợp lệ của chứng chỉ.
+Cách khắc phục: Bật lại xác thực chứng chỉ bằng cách sử dụng set_verify với các cờ mặc định hoặc loại bỏ verify_callback để dùng quy trình xác thực tích hợp của OpenSSL.",python:S4830
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/search.py,58,"Nguyên nhân: Mã nguồn tắt kiểm tra chứng chỉ SSL khi gọi requests, dễ bị tấn công trung gian.
+Cách khắc phục: Bật kiểm tra chứng chỉ SSL bằng cách bỏ tham số verify=False trong requests.",external_bandit:B501
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/search.py,102,"Nguyên nhân: Xác thực chứng chỉ TLS bị vô hiệu hóa, dẫn đến không kiểm tra tính hợp lệ của chứng chỉ.
+Cách khắc phục: Bật lại xác thực chứng chỉ bằng cách sử dụng set_verify với các cờ mặc định hoặc loại bỏ verify_callback để dùng quy trình xác thực tích hợp của OpenSSL.",python:S4830
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/search.py,102,"Nguyên nhân: Mã nguồn tắt kiểm tra chứng chỉ SSL khi gọi requests, dễ bị tấn công trung gian.
+Cách khắc phục: Bật kiểm tra chứng chỉ SSL bằng cách bỏ tham số verify=False trong requests.",external_bandit:B501
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/ct_datalake_config.py,39,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/ct_datalake_config.py,58,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/openai_key.py,13,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,frontend/src/utils/session.js,108,"Nguyên nhân: Tên người dùng được mã hóa cứng dưới dạng văn bản thuần trong mã nguồn, gây rủi ro lộ thông tin đăng nhập nhạy cảm.
+Cách khắc phục: Lưu tên người dùng trong biến môi trường và tham chiếu đến nó qua process.env thay vì để trực tiếp trong mã nguồn.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):ajinabraham.njsscan.generic.hardcoded_secrets.node_username
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CTAccessDenied.vue,127,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CTAccessDenied.vue,134,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/vite.config.js,3,"Nguyên nhân: Khi import các module có sẵn của Node.js, không sử dụng tiền tố node: khiến mã nguồn khó phân biệt được đó là module tích hợp sẵn hay gói bên thứ ba từ npm, gây nhầm lẫn và tiềm ẩn rủi ro bảo mật khi có gói độc giả sử dụng tên tương tự.
+Cách khắc phục: Sử dụng tiền tố node: trước tên module khi import, ví dụ thay 'fs' bằng 'node:fs' để xác định rõ ràng đây là module tích hợp sẵn của Node.js.",javascript:S7772
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/data/metadata_out.json,14258,"Nguyên nhân: Tệp metadata_out.json đang sử dụng địa chỉ URL không an toàn, có thể khiến dữ liệu bị nghe lén hoặc tấn công trung gian khi truyền tải.
+Cách khắc phục: Thay thế địa chỉ URL không an toàn bằng giao thức HTTPS để đảm bảo kết nối được mã hóa và bảo mật.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS137138
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/data/metadata_out.json,18813,"Nguyên nhân: Tệp metadata_out.json đang sử dụng địa chỉ URL không an toàn, có thể khiến dữ liệu bị nghe lén hoặc tấn công trung gian khi truyền tải.
+Cách khắc phục: Thay thế địa chỉ URL không an toàn bằng giao thức HTTPS để đảm bảo kết nối được mã hóa và bảo mật.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS137138
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/data/metadata_out.json,19686,"Nguyên nhân: Tệp metadata_out.json đang sử dụng địa chỉ URL không an toàn, có thể khiến dữ liệu bị nghe lén hoặc tấn công trung gian khi truyền tải.
+Cách khắc phục: Thay thế địa chỉ URL không an toàn bằng giao thức HTTPS để đảm bảo kết nối được mã hóa và bảo mật.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS137138
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/data/metadata_out.json,28522,"Nguyên nhân: Tệp metadata_out.json đang sử dụng địa chỉ URL không an toàn, có thể khiến dữ liệu bị nghe lén hoặc tấn công trung gian khi truyền tải.
+Cách khắc phục: Thay thế địa chỉ URL không an toàn bằng giao thức HTTPS để đảm bảo kết nối được mã hóa và bảo mật.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS137138
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/data/metadata_out.json,31536,"Nguyên nhân: Tệp metadata_out.json đang sử dụng địa chỉ URL không an toàn, có thể khiến dữ liệu bị nghe lén hoặc tấn công trung gian khi truyền tải.
+Cách khắc phục: Thay thế địa chỉ URL không an toàn bằng giao thức HTTPS để đảm bảo kết nối được mã hóa và bảo mật.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS137138
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/data/metadata_out.json,39608,"Nguyên nhân: Tệp metadata_out.json đang sử dụng địa chỉ URL không an toàn, có thể khiến dữ liệu bị nghe lén hoặc tấn công trung gian khi truyền tải.
+Cách khắc phục: Thay thế địa chỉ URL không an toàn bằng giao thức HTTPS để đảm bảo kết nối được mã hóa và bảo mật.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS137138
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,48,"Nguyên nhân: Mã nguồn bị vô hiệu hóa bằng chú thích làm giảm khả năng đọc và bảo trì mã.
+Cách khắc phục: Xóa hoàn toàn các đoạn mã đã bị chú thích và sử dụng hệ thống quản lý phiên bản để khôi phục khi cần.",python:S125
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,77,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,77,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,79,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,79,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,88,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,98,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,141,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,141,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,143,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,143,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,171,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,171,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,173,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,173,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,199,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,199,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,201,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,201,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,244,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,244,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/utils/activity_logger.py,246,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/utils/activity_logger.py,246,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/create_doctype.py,9,"Nguyên nhân: Khối try-except chỉ bắt lỗi rồi bỏ qua, làm che giấu lỗi và khó phát hiện sự cố.
+Cách khắc phục: Ghi log hoặc xử lý lỗi cụ thể trong khối except thay vì chỉ dùng pass.",external_bandit:B110
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/create_doctype.py,9,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/create_doctype.py,21,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/fastapi_app.py,30,"Nguyên nhân: Cấu hình CORS sử dụng ký tự đại diện cho phép mọi nguồn gốc truy cập, gây ra rủi ro bảo mật.
+Cách khắc phục: Thay thế ký tự đại diện bằng danh sách các nguồn gốc được phép truy cập cụ thể trong cấu hình CORS.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.fastapi.security.wildcard-cors.wildcard-cors
+Mã nguồn & Cấu hình,,RELIABILITY,HIGH,OPEN,ct_datalake/fastapi_app.py,106,"Nguyên nhân: Sử dụng thao tác tệp đồng bộ như open() trong hàm bất đồng bộ sẽ chặn toàn bộ vòng lặp sự kiện, khiến không coroutine nào có thể chạy cho đến khi thao tác I/O hoàn tất.
+Cách khắc phục: Sử dụng thư viện aiofiles để thực hiện các thao tác tệp theo cách bất đồng bộ thay vì dùng open() thông thường.",python:S7493
+Mã nguồn & Cấu hình,,RELIABILITY,BLOCKER,OPEN,ct_datalake/fastapi_app.py,127,"Nguyên nhân: Hàm hoặc phương thức được gọi với số lượng đối số không đúng (thiếu hoặc thừa).
+Cách khắc phục: Sửa lỗi bằng cách đảm bảo số lượng và thứ tự đối số khi gọi hàm khớp với định nghĩa của hàm đó.",python:S930
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/import_data.py,5,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/import_data.py,62,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/import_data.py,68,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,ct_datalake/import_data.py,92,"Nguyên nhân: Một khối mã rỗng gây nhầm lẫn vì người bảo trì không thể xác định được đó là cố ý hay do việc triển khai chưa hoàn thiện.
+Cách khắc phục: Xóa bỏ khối mã rỗng hoặc thêm mã xử lý phù hợp vào trong, nếu cần giữ lại thì hãy thêm chú thích giải thích lý do.",python:S108
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,ct_datalake/manage_index.py,103,"Nguyên nhân: Một khối mã rỗng gây nhầm lẫn vì người bảo trì không thể xác định được đó là cố ý hay do việc triển khai chưa hoàn thiện.
+Cách khắc phục: Xóa bỏ khối mã rỗng hoặc thêm mã xử lý phù hợp vào trong, nếu cần giữ lại thì hãy thêm chú thích giải thích lý do.",python:S108
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,frontend/Dockerfile,1,"Nguyên nhân: Dockerfile frontend thiếu lệnh USER tạo người dùng không phải root.
+Cách khắc phục: Thêm lệnh RUN tạo user và GROUP, sau đó dùng USER nonroot trước CMD trong frontend/Dockerfile.",external_Trivy (MegaLinter REPOSITORY_TRIVY):DS-0002
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,frontend/Dockerfile,1,"Nguyên nhân: Dockerfile frontend chưa định nghĩa người dùng container riêng biệt.
+Cách khắc phục: Tạo user chuyên dụng bằng RUN adduser và chuyển ngữ cảnh thực thi bằng USER trong frontend/Dockerfile.",external_Checkov (MegaLinter REPOSITORY_CHECKOV):CKV_DOCKER_3
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/Dockerfile,2,"Nguyên nhân: Sử dụng các ký tự không đồng nhất (chữ hoa và chữ thường) trong các instruction Dockerfile gây hiểu lầm và làm giảm hiệu quả hợp tác.
+Cách khắc phục: Tuân thủ viết instruction Dockerfile bằng chữ hoa và argument bằng chữ thường để tăng tính rõ ràng và hợp tác.",docker:S6476
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/Dockerfile,10,"Nguyên nhân: Sử dụng các ký tự không đồng nhất (chữ hoa và chữ thường) trong các instruction Dockerfile gây hiểu lầm và làm giảm hiệu quả hợp tác.
+Cách khắc phục: Tuân thủ viết instruction Dockerfile bằng chữ hoa và argument bằng chữ thường để tăng tính rõ ràng và hợp tác.",docker:S6476
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,frontend/Dockerfile,15,"Nguyên nhân: Dockerfile không khai báo lệnh USER nên tiến trình trong container chạy với quyền root, tăng rủi ro nếu kẻ tấn công kiểm soát tiến trình.
+Cách khắc phục: Tạo một tài khoản người dùng không phải root trong Dockerfile và thêm lệnh USER vào cuối để chuyển sang tài khoản đó trước khi khởi chạy ứng dụng.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):dockerfile.security.missing-user.missing-user
+Lỗ hổng Thư viện (SCA),axios,SECURITY,HIGH,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Phiên bản axios 1.16.0 có lỗ hổng cho phép kẻ tấn công điều khiển proxy.
+Cách khắc phục: Cập nhật axios lên phiên bản 0.33.0 hoặc 1.18.0.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-gcfj-64vw-6mp9
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Phiên bản axios 1.16.0 có lỗ hổng Prototype Pollution qua các trường con của auth.
+Cách khắc phục: Nâng cấp axios lên phiên bản 1.18.0.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2026-67314
+Lỗ hổng Thư viện (SCA),postcss,SECURITY,HIGH,OPEN,frontend/package-lock.json,1183,"Nguyên nhân: Thư viện postcss phiên bản 8.5.14 tự động tìm và tải file bản đồ nguồn từ comments trong CSS, gây ra lỗ hổng duyệt đường dẫn và tiết lộ file .map.
+Cách khắc phục: Nâng cấp thư viện postcss lên phiên bản 8.5.18 trở lên trong file package.json.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-r28c-9q8g-f849
+Lỗ hổng Thư viện (SCA),form-data,SECURITY,HIGH,OPEN,frontend/package-lock.json,709,"Nguyên nhân: Thư viện form-data phiên bản 4.0.5 không xử lý ký tự xuống dòng và dấu ngoặc kép trong tên trường và tên file, dẫn đến lỗ hổng chèn CRLF.
+Cách khắc phục: Cập nhật gói form-data lên phiên bản an toàn (4.0.6, 3.0.5 hoặc 2.5.6) trong file package-lock.json.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2026-12143
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Thư viện axios phiên bản 1.16.0 không bảo vệ các đối tượng cấu hình lồng nhau như 'auth' và 'paramsSerializer' khỏi các giá trị prototype bị nhiễm bẩn.
+Cách khắc phục: Cập nhật axios lên phiên bản 1.18.0 trở lên bằng lệnh 'npm update axios' để vá lỗ hổng prototype pollution.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-7q8q-rj6j-mhjq
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Phiên bản axios 1.16.0 có lỗ hổng gây ra đệ quy không kiểm soát, dẫn đến từ chối dịch vụ.
+Cách khắc phục: Nâng cấp axios lên phiên bản 0.33.0 hoặc 1.18.0.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-42h9-826w-cgv3
+Lỗ hổng Thư viện (SCA),nanoid,SECURITY,HIGH,OPEN,frontend/package-lock.json,1146,"Nguyên nhân: Phiên bản nanoid 3.3.12 có lỗ hổng CVE-2026-67213 gây ra vòng lặp vô hạn khi kích thước là 0.
+Cách khắc phục: Nâng cấp nanoid lên phiên bản 3.3.17 hoặc 5.1.6.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2026-67213
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Phiên bản axios 1.16.0 có lỗ hổng bảo mật cho phép thay đổi cấu trúc yêu cầu.
+Cách khắc phục: Nâng cấp axios lên phiên bản 1.18.0 hoặc 0.33.0.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-mmx7-hfxf-jppx
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: : Phiên bản axios từ 0.28.0 có lỗi đệ quy không kiểm soát trong hàm formDataToJSON, dẫn đến nguy cơ tấn công từ chối dịch vụ khi xử lý dữ liệu FormData do kẻ tấn công kiểm soát.
+Cách khắc phục: : Cập nhật axios lên phiên bản 0.33.0 hoặc 1.18.0 trong file frontend/package-lock.json.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-pmv8-rq9r-6j72
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Thư viện axios phiên bản cũ không nhận diện địa chỉ 0.0.0.0 là nội bộ khi kiểm tra NO_PROXY, dẫn đến có thể gửi request qua proxy ngoài ý muốn.
+Cách khắc phục: Cập nhật axios lên phiên bản 1.18.0 hoặc 0.33.0 trở lên trong file package-lock.json.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-f4gw-2p7v-4548
+Lỗ hổng Thư viện (SCA),nanoid,SECURITY,HIGH,OPEN,frontend/package-lock.json,1146,"Nguyên nhân: Thư viện nanoid phiên bản 3.3.12 tồn tại lỗ hổng vòng lặp vô hạn khi nhận tham số kích thước âm trong module non-secure, khiến ứng dụng có thể bị treo hoặc từ chối dịch vụ.
+Cách khắc phục: Nâng cấp nanoid lên phiên bản 3.3.16 trở lên trong frontend/package-lock.json bằng lệnh npm update nanoid hoặc sửa trực tiếp phiên bản trong package.json rồi chạy npm install.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2026-67214
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Phiên bản axios 1.16.0 có lỗ hổng cho phép tải lên qua HTTP/2 vượt qua giới hạn maxBodyLength khi sử dụng streamed request bodies.
+Cách khắc phục: Nâng cấp axios lên phiên bản 1.18.0 trở lên trong file frontend/package-lock.json.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-mwf2-3pr3-8698
+Lỗ hổng Thư viện (SCA),postcss,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,1183,"Nguyên nhân: Gói postcss phiên bản 8.5.14 chưa được vá lỗi bảo mật CVE-2026-69153, cho phép kẻ tấn công đọc tệp .map tùy ý khi tham số from không được thiết lập.
+Cách khắc phục: Nâng cấp gói postcss lên phiên bản 8.5.23 trở lên bằng cách cập nhật trong package.json và chạy lệnh npm install.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2026-69153
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Thư viện axios phiên bản 1.16.0 còn tồn tại lỗ hổng bypass giới hạn độ sâu khi serialize form, cho phép kẻ tấn công vượt qua cơ chế bảo vệ maxDepth bằng metatoken {}.
+Cách khắc phục: Nâng cấp thư viện axios lên phiên bản 1.18.0 hoặc cao hơn trong file frontend/package-lock.json.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-hcpx-6fm6-wx23
+Lỗ hổng Thư viện (SCA),axios,SECURITY,MEDIUM,OPEN,frontend/package-lock.json,533,"Nguyên nhân: Axios fetch adapter không áp dụng maxBodyLength cho Request body ReadableStream, cho phép upload không giới hạn.
+Cách khắc phục: Cập nhật axios lên phiên bản 1.18.0.",external_Trivy (MegaLinter REPOSITORY_TRIVY):GHSA-jqh4-m9w3-8hp9
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/App.vue,149,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/HelloWorld.vue,30,"Nguyên nhân: Mã nguồn dùng ARIA role trên phần tử chung chung như div hoặc span trong khi đã có thẻ HTML ngữ nghĩa tương đương, gây khó khăn cho khả năng truy cập và bảo trì.
+Cách khắc phục: Thay thế các phần tử dùng ARIA role bằng thẻ HTML ngữ nghĩa tương ứng, ví dụ đổi div có role=""button"" thành thẻ button, rồi kiểm tra lại toàn bộ giao diện.",Web:S6819
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/HelloWorld.vue,51,"Nguyên nhân: Mã nguồn dùng ARIA role trên phần tử chung chung như div hoặc span trong khi đã có thẻ HTML ngữ nghĩa tương đương, gây khó khăn cho khả năng truy cập và bảo trì.
+Cách khắc phục: Thay thế các phần tử dùng ARIA role bằng thẻ HTML ngữ nghĩa tương ứng, ví dụ đổi div có role=""button"" thành thẻ button, rồi kiểm tra lại toàn bộ giao diện.",Web:S6819
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/HelloWorld.vue,59,"Nguyên nhân: Mã nguồn dùng ARIA role trên phần tử chung chung như div hoặc span trong khi đã có thẻ HTML ngữ nghĩa tương đương, gây khó khăn cho khả năng truy cập và bảo trì.
+Cách khắc phục: Thay thế các phần tử dùng ARIA role bằng thẻ HTML ngữ nghĩa tương ứng, ví dụ đổi div có role=""button"" thành thẻ button, rồi kiểm tra lại toàn bộ giao diện.",Web:S6819
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/HelloWorld.vue,67,"Nguyên nhân: Mã nguồn dùng ARIA role trên phần tử chung chung như div hoặc span trong khi đã có thẻ HTML ngữ nghĩa tương đương, gây khó khăn cho khả năng truy cập và bảo trì.
+Cách khắc phục: Thay thế các phần tử dùng ARIA role bằng thẻ HTML ngữ nghĩa tương ứng, ví dụ đổi div có role=""button"" thành thẻ button, rồi kiểm tra lại toàn bộ giao diện.",Web:S6819
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/HelloWorld.vue,75,"Nguyên nhân: Mã nguồn dùng ARIA role trên phần tử chung chung như div hoặc span trong khi đã có thẻ HTML ngữ nghĩa tương đương, gây khó khăn cho khả năng truy cập và bảo trì.
+Cách khắc phục: Thay thế các phần tử dùng ARIA role bằng thẻ HTML ngữ nghĩa tương ứng, ví dụ đổi div có role=""button"" thành thẻ button, rồi kiểm tra lại toàn bộ giao diện.",Web:S6819
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/HelloWorld.vue,83,"Nguyên nhân: Mã nguồn dùng ARIA role trên phần tử chung chung như div hoặc span trong khi đã có thẻ HTML ngữ nghĩa tương đương, gây khó khăn cho khả năng truy cập và bảo trì.
+Cách khắc phục: Thay thế các phần tử dùng ARIA role bằng thẻ HTML ngữ nghĩa tương ứng, ví dụ đổi div có role=""button"" thành thẻ button, rồi kiểm tra lại toàn bộ giao diện.",Web:S6819
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/style.css,106,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/style.css,137,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/style.css,147,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CandidateCard.vue,168,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CandidateCard.vue,173,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CandidateCard.vue,235,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CandidateCard.vue,257,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/CandidateCard.vue,269,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,120,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,129,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,136,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,140,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,218,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,228,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,262,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,283,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,299,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,313,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,320,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/DraftModal.vue,326,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,Dockerfile,1,"Nguyên nhân: Dockerfile frontend chưa định nghĩa người dùng container riêng biệt.
+Cách khắc phục: Tạo user chuyên dụng bằng RUN adduser và chuyển ngữ cảnh thực thi bằng USER trong frontend/Dockerfile.",external_Checkov (MegaLinter REPOSITORY_CHECKOV):CKV_DOCKER_3
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,Dockerfile,25,"Nguyên nhân: Dockerfile không khai báo lệnh USER nên tiến trình trong container chạy với quyền root, tăng rủi ro nếu kẻ tấn công kiểm soát tiến trình.
+Cách khắc phục: Tạo một tài khoản người dùng không phải root trong Dockerfile và thêm lệnh USER vào cuối để chuyển sang tài khoản đó trước khi khởi chạy ứng dụng.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):dockerfile.security.missing-user.missing-user
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/G600.vue,82,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/G600.vue,88,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/JDMatch.vue,72,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/JDMatch.vue,86,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/JDMatch.vue,92,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,frontend/src/components/JDMatch.vue,240,"Nguyên nhân: Tỷ lệ tương phản màu giữa văn bản và nền quá thấp, không đáp ứng tiêu chuẩn WCAG AA tối thiểu 4.5:1 cho văn bản thường.
+Cách khắc phục: Tăng độ tương phản bằng cách làm tối màu văn bản hoặc làm sáng màu nền sao cho đạt tỷ lệ tối thiểu 4.5:1.",css:S7924
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/Search.vue,69,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/Search.vue,80,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/Search.vue,87,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,RELIABILITY,MEDIUM,OPEN,frontend/src/components/Search.vue,101,"Nguyên nhân: Phần tử label thiếu nội dung văn bản hoặc không liên kết với control qua thuộc tính htmlFor hoặc không bao bọc control, gây khó khăn cho người dùng khiếm thị và giao diện khó hiểu.
+Cách khắc phục: Đảm bảo label bao bọc control hoặc thêm thuộc tính htmlFor trỏ tới id của control, đồng thời bổ sung nội dung văn bản cho label và tránh sinh id ngẫu nhiên không ổn định.",Web:S6853
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,Dockerfile,1,"Nguyên nhân: Dockerfile frontend thiếu lệnh USER tạo người dùng không phải root.
+Cách khắc phục: Thêm lệnh RUN tạo user và GROUP, sau đó dùng USER nonroot trước CMD trong frontend/Dockerfile.",external_Trivy (MegaLinter REPOSITORY_TRIVY):DS-0002
+Mã nguồn & Cấu hình,,MAINTAINABILITY,MEDIUM,OPEN,Dockerfile,4,"Nguyên nhân: Không cố định phiên bản trong lệnh cài đặt apt-get có thể dẫn đến sự không tương thích.
+Cách khắc phục: Sử dụng lệnh `apt-get install <package>=<version>` để cố định phiên bản.",external_hadolint:DL3008
+Mã nguồn & Cấu hình,,SECURITY,BLOCKER,OPEN,Dockerfile,22,"Nguyên nhân: Có khả năng lộ bí mật môi trường 'OPENAI_API_KEY' trong ENV.
+Cách khắc phục: Xóa hoặc bảo vệ biến môi trường 'OPENAI_API_KEY' trong Dockerfile.",external_Trivy (MegaLinter REPOSITORY_TRIVY):DS-0031
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,app.py,143,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,app.py,144,"Nguyên nhân: Các chuỗi văn bản bị lặp lại nhiều lần làm cho việc tái cấu trúc mã nguồn trở nên phức tạp và dễ gây lỗi.
+Cách khắc phục: Sử dụng hằng số để thay thế các chuỗi văn bản lặp lại, chỉ cần cập nhật ở một vị trí duy nhất.",python:S1192
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/build_index_out.py,29,"Nguyên nhân: Khối except bắt ngoại lệ SystemExit hoặc BaseException mà không ném lại.
+Cách khắc phục: Luôn ném lại ngoại lệ SystemExit, BaseException và các ngoại lệ bị bắt trong một khối except trống để đảm bảo chương trình thoát đúng cách.",python:S5754
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/jd_match.py,750,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Mã nguồn & Cấu hình,,SECURITY,HIGH,OPEN,ct_datalake/llm_rerank.py,60,"Nguyên nhân: Sử dụng thuật toán băm yếu hoặc bị lỗi.
+Cách khắc phục: Thay thế bằng thuật toán băm mạnh hơn.",external_devskim (MegaLinter REPOSITORY_DEVSKIM):DS126858
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/llm_rerank.py,60,"Nguyên nhân: Sử dụng MD5 băm yếu cho bảo mật.
+Cách khắc phục: Xem xét sử dụng usedforsecurity=False.",external_bandit:B324
+Mã nguồn & Cấu hình,,SECURITY,MEDIUM,OPEN,ct_datalake/llm_rerank.py,60,"Nguyên nhân: Hàm băm MD5 được phát hiện không an toàn vì không chống được va chạm, không phù hợp làm chữ ký mật mã.
+Cách khắc phục: Thay thế MD5 bằng SHA256 hoặc SHA3 trong file ct_datalake/api.py tại dòng 76.",external_Semgrep OSS (MegaLinter REPOSITORY_SEMGREP):python.lang.security.insecure-hash-algorithms-md5.insecure-hash-algorithm-md5
+Mã nguồn & Cấu hình,,MAINTAINABILITY,HIGH,OPEN,ct_datalake/translate.py,5,"Nguyên nhân: Hàm có độ phức tạp nhận thức vượt ngưỡng quy định.
+Cách khắc phục: Tách các điều kiện phức tạp thành hàm mới, chia nhỏ hàm lớn và xử lý ngoại lệ sớm để giảm độ phức tạp nhận thức.",python:S3776
+Lỗ hổng Thư viện (SCA),frappe,SECURITY,MEDIUM,OPEN,requirements.txt,1,"Nguyên nhân: Thư viện frappe phiên bản 15.0.0 chứa lỗ hổng SQL Injection do kiểm tra đầu vào không hợp lệ.
+Cách khắc phục: Nâng cấp thư viện frappe lên phiên bản 15.55.0 hoặc 14.93.2.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2025-30217
+Lỗ hổng Thư viện (SCA),frappe,SECURITY,MEDIUM,OPEN,requirements.txt,1,"Nguyên nhân: Phần mềm Frappe phiên bản 15.0.0 có lỗ hổng cho phép người dùng hệ thống tạo tài liệu theo cách cụ thể, dẫn đến khả năng thực thi mã từ xa.
+Cách khắc phục: Cập nhật thư viện Frappe trong requirements.txt lên phiên bản đã vá lỗi (ví dụ: 15.52.0 trở lên).",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2025-30213
+Lỗ hổng Thư viện (SCA),frappe,SECURITY,MEDIUM,OPEN,requirements.txt,1,"Nguyên nhân: Frappe phiên bản 15.0.0 chứa lỗ hổng SQL injection do không kiểm tra dữ liệu đầu vào đầy đủ.
+Cách khắc phục: Nâng cấp gói frappe lên phiên bản 15.51.0 hoặc mới hơn trong file requirements.txt.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2025-30212
+Lỗ hổng Thư viện (SCA),frappe,SECURITY,HIGH,OPEN,requirements.txt,1,"Nguyên nhân: Frappe có lỗ hổng tiết lộ thông tin dẫn đến việc chiếm đoạt tài khoản.
+Cách khắc phục: Nâng cấp Frappe lên phiên bản 14.89.0 hoặc 15.51.0.",external_Trivy (MegaLinter REPOSITORY_TRIVY):CVE-2025-30214
+Mã nguồn & Cấu hình,,SECURITY_HOTSPOT,MEDIUM,TO_REVIEW,Dockerfile,19,"Nguyên nhân: Khi xây dựng hình ảnh Docker từ Dockerfile, thư mục ngữ cảnh được sử dụng và gửi đến daemon Docker trước khi bắt đầu xây dựng thực tế. Thư mục này có thể chứa các tệp không mong muốn, ảnh hưởng đến tính bảo mật.
+Cách khắc phục: Giới hạn việc sử dụng globbing trong định nghĩa nguồn của COPY và ADD. Tránh sao chép toàn bộ thư mục ngữ cảnh vào hình ảnh.",docker:S6470
+Mã nguồn & Cấu hình,,SECURITY_HOTSPOT,MEDIUM,TO_REVIEW,frontend/Dockerfile,6,"Nguyên nhân: Khi xây dựng hình ảnh Docker từ Dockerfile, thư mục ngữ cảnh được sử dụng và gửi đến daemon Docker trước khi bắt đầu xây dựng thực tế. Thư mục này có thể chứa các tệp không mong muốn, ảnh hưởng đến tính bảo mật.
+Cách khắc phục: Giới hạn việc sử dụng globbing trong định nghĩa nguồn của COPY và ADD. Tránh sao chép toàn bộ thư mục ngữ cảnh vào hình ảnh.",docker:S6470
+Mã nguồn & Cấu hình,,SECURITY_HOTSPOT,MEDIUM,TO_REVIEW,Dockerfile,1,"Nguyên nhân: Chạy container với quyền người dùng đặc quyền làm yếu đi bảo mật runtime, cho phép người dùng thực hiện các hành động quản trị.
+Cách khắc phục: Chạy container với người dùng không đặc quyền để tăng cường bảo mật.",docker:S6471
+Mã nguồn & Cấu hình,,SECURITY_HOTSPOT,MEDIUM,TO_REVIEW,frontend/Dockerfile,10,"Nguyên nhân: Chạy container với quyền người dùng đặc quyền làm yếu đi bảo mật runtime, cho phép người dùng thực hiện các hành động quản trị.
+Cách khắc phục: Chạy container với người dùng không đặc quyền để tăng cường bảo mật.",docker:S6471
