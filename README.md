@@ -1,64 +1,110 @@
-# CT DataLake - AI Semantic Search (Frappe v15 + Vue 3)
+# CT DataLake - AI Semantic Search Profile
 
-Dự án này là một hệ thống tìm kiếm ngữ nghĩa (Semantic Search) tích hợp trí tuệ nhân tạo, được xây dựng trên **Frappe Framework v15** và frontend **Vue.js 3**.
+Hệ thống tìm kiếm ngữ nghĩa (semantic search) hồ sơ giáo sư / tiến sĩ và match với Job Description, xây trên **Frappe Framework v15** (backend) + **Vue 3 + Vite** (frontend). Có thêm module phân tích tờ trình G600 (PDF).
+
+- Repo: [qh-fol-in-luv-w-data/ct-datalake-profile-search](https://github.com/qh-fol-in-luv-w-data/ct-datalake-profile-search)
+- Frappe app name: `ct_datalake`
 
 ## Thành phần chính
-- **Backend (Frappe v15)**: Chứa logic tìm kiếm FAISS, LLM Reranking, JD Matching và G600 Analysis dưới dạng các whitelisted API của Frappe.
-- **Frontend (Vue 3 + Vite)**: Giao diện người dùng hiện đại, tốc độ cao, gọi API từ Frappe Backend.
-- **AI Logic**: Sử dụng FAISS, Sentence-Transformers, và OpenAI GPT-4o.
 
-## Cấu trúc thư mục mới
-- `apps/ct_datalake/`: Chứa mã nguồn của Frappe App.
-  - `ct_datalake/api.py`: Các API chính được whitelisted.
-  - `ct_datalake/*.py`: Core logic (search, match, rerank).
-- `frontend/`: Chứa mã nguồn frontend Vue 3.
-- `Dockerfile` & `docker-compose.yml`: Cấu hình container hóa cho Frappe (Backend) và Vue (Frontend).
+| Layer | Công nghệ |
+|---|---|
+| Backend | Frappe v15, whitelisted API dưới `ct_datalake.api.*` |
+| AI | OpenAI GPT-4o (rerank + JD analyze + G600), FAISS, Sentence-Transformers (index) |
+| Frontend | Vue 3 (3.5), Vite 8, axios, lucide-vue-next |
+| Ingest | `pypdf`, `python-docx`, `deep-translator` |
 
-## Yêu cầu hệ thống
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- `OPENAI_API_KEY`
+## Cấu trúc thư mục
 
-## Hướng dẫn cài đặt và chạy ứng dụng
-
-### 1. Cấu hình biến môi trường
-Export API key của OpenAI:
-```bash
-export OPENAI_API_KEY="your-openai-api-key-here"
+```
+.
+├── ct_datalake/                    # Frappe app
+│   ├── api.py                      # Các whitelisted endpoint (search / match / analyze / draft)
+│   ├── search.py                   # Core FAISS search
+│   ├── llm_rerank.py               # Rerank kết quả bằng LLM
+│   ├── jd_match.py                 # Match JD ↔ hồ sơ
+│   ├── ai_matching.py              # Logic matching phụ trợ
+│   ├── manage_index.py             # Build / rebuild FAISS index
+│   ├── import_data.py              # Import dữ liệu vào DocType
+│   ├── translate.py                # Dịch hỗ trợ tìm kiếm đa ngữ
+│   ├── draft_doc.py                # Sinh tài liệu draft
+│   ├── openai_key.py               # Đọc OPENAI_API_KEY (env / site_config)
+│   ├── fastapi_app.py              # FastAPI phụ trợ (dev/test)
+│   ├── hooks.py                    # SPA route /aicenter/2as-master-profile
+│   ├── ct_datalake/doctype/        # DocType: candidate, dl_session, dl_action_log,
+│   │                               #          dl_ai_call_log, ct_datalake_settings
+│   ├── data/                       # FAISS index + metadata
+│   └── www/                        # Web template gắn SPA
+├── frontend/                       # Vue 3 SPA (Vite)
+├── Dockerfile
+├── docker-compose.yml
+├── pyproject.toml                  # setuptools; extras "ml" = faiss-cpu, sentence-transformers, PyMuPDF
+├── requirements.txt
+└── README.md
 ```
 
-### 2. Khởi chạy bằng Docker Compose
+## Yêu cầu hệ thống
+
+- Docker + Docker Compose (production), hoặc Frappe Bench v15 + Node.js 18+ (dev)
+- Python 3.10+
+- `OPENAI_API_KEY`
+
+## Cài đặt & chạy bằng Docker
+
 ```bash
+export OPENAI_API_KEY="sk-..."
 docker-compose up --build
 ```
 
-### 3. Truy cập ứng dụng
-- **Giao diện Web (Vue 3)**: [http://localhost](http://localhost) (Port 80)
-- **API Backend (Frappe)**: [http://localhost:8000/api/method/ct_datalake.api.root](http://localhost:8000/api/method/ct_datalake.api.root)
+- Frontend (Vue): http://localhost
+- Backend (Frappe): http://localhost:8000
 
-## Phát triển Frontend cục bộ
-Nếu bạn muốn phát triển frontend mà không dùng Docker:
+## Cài đặt trong Frappe Bench (dev)
+
+```bash
+cd frappe-bench
+bench get-app ct_datalake https://github.com/qh-fol-in-luv-w-data/ct-datalake-profile-search
+bench --site <site> install-app ct_datalake
+
+# Thư viện AI (không đóng gói mặc định để tránh nặng bench)
+./env/bin/pip install "ct_datalake[ml]"
+```
+
+Frontend dev:
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
 
-## API Endpoints (Frappe)
-Tất cả API được truy cập qua prefix `/api/method/ct_datalake.api.`:
-- `root`: Health check
-- `semantic_search`: Tìm kiếm FAISS
-- `semantic_search_llm`: Tìm kiếm + Rerank LLM
-- `jd_match`: Match JD văn bản
-- `jd_match_upload`: Match JD từ file upload
-- `g600_analyze`: Phân tích tờ trình G600 PDF
+## Whitelisted API
 
-## Ghi chú
-Dự án đã được cấu hình để chạy trong môi trường container với đầy đủ các dependency cho AI (FAISS, PyMuPDF, etc.) và Framework Frappe v15.
+Base path: `/api/method/ct_datalake.api.<name>`
 
-# 2. Import dữ liệu cũ vào DocType  
-+ bench --site devapp.ctpai.vn execute ct_datalake.api.import_from_json
+| Endpoint | Mô tả |
+|---|---|
+| `root` / `health` | Health check |
+| `semantic_search` | FAISS search theo `query`, `mode`, `top_k` |
+| `semantic_search_llm` | FAISS search + rerank bằng LLM |
+| `jd_match` | Match JD dạng text với danh sách hồ sơ |
+| `jd_match_upload` | Match JD upload từ file (PDF/DOCX) |
+| `jd_analyze` | Phân tích chi tiết 1 JD |
+| `jd_parse_only` | Chỉ parse JD, không match |
+| `g600_analyze` | Phân tích tờ trình G600 (PDF) |
+| `draft_document` | Sinh tài liệu draft |
+| `get_context` | Trả context cho SPA (session, user, config) |
 
-# 3. Rebuild FAISS từ DocType
-+ bench --site devapp.ctpai.vn execute ct_datalake.api.rebuild_index
+## Quản trị FAISS index
 
+```bash
+# Import dữ liệu cũ vào DocType
+bench --site <site> execute ct_datalake.api.import_from_json
+
+# Rebuild FAISS index từ DocType
+bench --site <site> execute ct_datalake.api.rebuild_index
+```
+
+## License
+
+MIT © CT Group
